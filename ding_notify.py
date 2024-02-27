@@ -52,12 +52,13 @@ def build_notifier_from_env():
     ''' Build DingNotifier from env var. '''
     hook                     : str = os.getenv('DING_NOTIFIER_HOOK')
     sec_key                  : str = os.getenv('DING_NOTIFIER_SEC_KEY')
-    if not hook.startswith("https://oapi.dingtalk.com/robot/send?access_token="):
+    if not len(hook) > 0 or not hook.startswith("https://oapi.dingtalk.com/robot/send?access_token="):
         raise ValueError(f'[DingNotify-ERROR] Invalid hook environment variable: $DING_NOTIFIER_HOOK = {hook}')
     if not len(sec_key) > 0:
         raise ValueError(f'[DingNotify-ERROR] Security key not set! $DING_NOTIFIER_SEC_KEY is empty!')
     return DingNotifier(hook, sec_key)
 
 if __name__ == '__main__':
-    notifier = DingNotifier.build_notifier_from_cfg('./config.yaml')
+    # notifier = build_notifier_from_cfg('./config.yaml')
+    notifier = build_notifier_from_env()
     notifier.send_str('hello')
