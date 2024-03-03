@@ -1,6 +1,8 @@
 import os
 import sys
 import json
+import socket
+import subprocess
 import requests
 from omegaconf import OmegaConf
 
@@ -8,10 +10,7 @@ class DingNotifier():
     def __init__(self, hook:str, secure_key=None, host=None, *args, **kwargs):
         self.url     = hook # Web URL gotten from DingTalk like {API url}?access_token={token}
         self.sec_key = secure_key # Secure key word gotten from DingTalk.
-        if host is None:
-            self.host = ''
-        else:
-            self.host = f'@ {host}'
+        self.host = '@ ' + socket.gethostname()
 
     def _error_handler(self, resp_dict:dict):
         '''
@@ -33,7 +32,7 @@ class DingNotifier():
         # 1. Prepare info message.
         time = os.popen('date').read().strip()
         prefix = f'###### {time} {self.host}\n\n'
-        
+
         # 1. Prepare data dict.
         data = {
             'markdown':{
@@ -74,6 +73,15 @@ def lines2reply(lines):
     ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
     return '> ' + '\n>\n> '.join(lines)
 
+def run_command(command):
+    try:
+        # run command, then capture output and error.
+        subprocess.run(command, shell=True, check=True, stderr=subprocess.PIPE, encoding='utf-8')
+        return None
+    except subprocess.CalledProcessError as e:
+        # return error
+        return e
+
 if __name__ == '__main__':
     pydir = os.path.dirname(__file__)
     notifier = build_notifier_from_cfg(os.path.join(pydir, 'config.yaml'))
@@ -87,13 +95,32 @@ if __name__ == '__main__':
     start_msg_lines.append(f'💡 `{cmd}`')
     start_msg = '\n\n'.join(start_msg_lines)
     notifier.send_str(start_msg)
-    
-    # run the command
-    os.system(cmd)
 
-    # FINISH ding!
+    # run the command
+    # ret = os.system(cmd)
+    start = int(os.popen('date +%s').read())
+    ret = run_command(cmd)
+    end = int(os.popen('date +%s').read())
+
     reply_prefix = lines2reply(start_msg_lines)
     finish_msg_lines = [reply_prefix]
-    finish_msg_lines.append(f'🔔 Action **finished**!')
+    finish_msg_lines.append(f'⏱️ **Time Cost**: {str(end - start)}s.')
+
+    if ret is not None:
+        # FINISH ding with error.
+
+        print(ret.stderr)
+
+        finish_msg_lines.append(f'🔔 Action **failed**.')
+        finish_msg_lines.append(lines2reply([f'`{str(ret)}`']))
+
+        # ERROR_LINES = 20
+        # finish_msg_lines.append('```')
+        # finish_msg_lines.append(lines2reply(ret.stderr.split('\n')[- ERROR_LINES:]))
+        # finish_msg_lines.append('```')
+    else:
+        # FINISH ding successfully!
+        finish_msg_lines.append(f'🔔 Action **finished**!')
+
     finish_msg = '\n\n'.join(finish_msg_lines)
     notifier.send_str(finish_msg)
