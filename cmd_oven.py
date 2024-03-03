@@ -59,14 +59,14 @@ def build_notifier_from_cfg(cfg_path:str):
     cfg = OmegaConf.load(cfg_path)
     return DingNotifier(**cfg)
 
-def build_notifier_from_env(): 
+def build_notifier_from_env():
     ''' Build DingNotifier from env var. '''
-    hook    : str = os.getenv('CMD_OVEN_HOOK')      # You should get the full web hook of ding's bot manager.
-    sec_key : str = os.getenv('CMD_OVEN_SEC_KEY')   # We use secure word to avoid illegal request.
-    host    : str = os.getenv('CMD_OVEN_HOST')      # Optional, use this to distinguish different machine.
+    hook    : str | None = os.getenv('CMD_OVEN_HOOK')      # You should get the full web hook of ding's bot manager.
+    sec_key : str | None = os.getenv('CMD_OVEN_SEC_KEY')   # We use secure word to avoid illegal request.
+    host    : str | None = os.getenv('CMD_OVEN_HOST')      # Optional, use this to distinguish different machine.
     if hook is None or not hook.startswith('https://oapi.dingtalk.com/robot/send?access_token='):
         raise ValueError(f'[DingNotify-ERROR] Invalid hook environment variable: $CMD_OVEN_HOOK = {hook}')
-    if not len(sec_key) > 0:
+    if sec_key is not None and not len(sec_key) > 0:
         raise ValueError(f'[DingNotify-ERROR] Security key not set! $CMD_OVEN_SEC_KEY is empty!')
     return DingNotifier(hook, sec_key, host)
 
@@ -75,7 +75,8 @@ def lines2reply(lines):
     return '> ' + '\n>\n> '.join(lines)
 
 if __name__ == '__main__':
-    notifier = build_notifier_from_cfg('./config.yaml')
+    pydir = os.path.dirname(__file__)
+    notifier = build_notifier_from_cfg(os.path.join(pydir, 'config.yaml'))
     # notifier = build_notifier_from_env()
 
     # START ding!
