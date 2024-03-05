@@ -4,7 +4,6 @@ import json
 import socket
 import subprocess
 import requests
-from omegaconf import OmegaConf
 
 class DingNotifier():
     def __init__(self, hook:str, secure_key=None, host=None, *args, **kwargs):
@@ -55,6 +54,8 @@ class DingNotifier():
 
 def build_notifier_from_cfg(cfg_path:str):
     ''' Build DingNotifier from config file. '''
+    from omegaconf import OmegaConf
+
     cfg = OmegaConf.load(cfg_path)
     return DingNotifier(**cfg)
 
@@ -85,14 +86,12 @@ def run_command(command):
 if __name__ == '__main__':
     pydir = os.path.dirname(__file__)
     notifier = build_notifier_from_cfg(os.path.join(pydir, 'config.yaml'))
-    # notifier = build_notifier_from_env()
+    notifier = build_notifier_from_env()
 
     # START ding!
     cmd = ' '.join(sys.argv[1:])
-    prefix_s = os.popen('date').read().strip()
     start_msg_lines = []
-    start_msg_lines.append(f'🔥 Action **start** with command:')
-    start_msg_lines.append(f'💡 `{cmd}`')
+    start_msg_lines.append(f'🔥 `{cmd}`')
     start_msg = '\n\n'.join(start_msg_lines)
     notifier.send_str(start_msg)
 
@@ -102,8 +101,10 @@ if __name__ == '__main__':
     ret = run_command(cmd)
     end = int(os.popen('date +%s').read())
 
+    # FINISH ding!
+    finish_msg_lines = []
     reply_prefix = lines2reply(start_msg_lines)
-    finish_msg_lines = [reply_prefix]
+    finish_msg_lines.append(reply_prefix)
     finish_msg_lines.append(f'⏱️ **Time Cost**: {str(end - start)}s.')
 
     if ret is not None:
@@ -111,8 +112,7 @@ if __name__ == '__main__':
 
         print(ret.stderr)
 
-        finish_msg_lines.append(f'🔔 Action **failed**.')
-        finish_msg_lines.append(lines2reply([f'`{str(ret)}`']))
+        finish_msg_lines.append(f'⚠️ `{str(ret)}`')
 
         # ERROR_LINES = 20
         # finish_msg_lines.append('```')
@@ -120,7 +120,7 @@ if __name__ == '__main__':
         # finish_msg_lines.append('```')
     else:
         # FINISH ding successfully!
-        finish_msg_lines.append(f'🔔 Action **finished**!')
+        finish_msg_lines.append(f'🔔 Done!')
 
     finish_msg = '\n\n'.join(finish_msg_lines)
-    notifier.send_str(finish_msg)
+    resp = notifier.send_str(finish_msg)
