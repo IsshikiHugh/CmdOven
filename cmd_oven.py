@@ -35,7 +35,9 @@ class DingNotifier():
         # 1. Prepare data dict.
         data = {
             'markdown':{
-                'title': self.sec_key,
+                # When comment on this message, title will be shown in quotation.
+                'title': f'[{self.sec_key}] {time} {self.host}',
+                # The things shown directly in the message.
                 'text': prefix + msg
             },
             'msgtype': 'markdown',
@@ -86,7 +88,7 @@ def run_command(command):
 if __name__ == '__main__':
     pydir = os.path.dirname(__file__)
     notifier = build_notifier_from_cfg(os.path.join(pydir, 'config.yaml'))
-    notifier = build_notifier_from_env()
+    # notifier = build_notifier_from_env()
 
     # START ding!
     cmd = ' '.join(sys.argv[1:])
@@ -109,9 +111,7 @@ if __name__ == '__main__':
 
     if ret is not None:
         # FINISH ding with error.
-
         print(ret.stderr)
-
         finish_msg_lines.append(f'⚠️ `{str(ret)}`')
 
         # ERROR_LINES = 20
