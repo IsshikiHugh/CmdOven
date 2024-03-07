@@ -79,7 +79,7 @@ def lines2reply(lines):
 def run_command(command):
     try:
         # run command, then capture output and error.
-        subprocess.run(command, shell=True, check=True, stderr=subprocess.PIPE, encoding='utf-8')
+        subprocess.run(command, shell=True, check=True, encoding='utf-8')
         return None
     except subprocess.CalledProcessError as e:
         # return error
