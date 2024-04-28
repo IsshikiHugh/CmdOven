@@ -15,8 +15,14 @@ Enjoy the "ding!" when the command is done!
 ## 使用 | Usage
 
 ```shell
-alias ding = "python /path/to/cmd_oven.py"
-ding echo "123"
+alias ding = "python /path/to/cmd_oven.py -r"
+ding echo "123"  # Run a command and notify both in the start and the end
+
+alias ding = "python /path/to/cmd_oven.py -rs"
+ding echo "123"  # Run a command and notify only in the end
+
+alias dlog = "python /path/to/cmd_oven.py -l"
+dlog "This is a normal log."  # Notify a log message
 ```
 
 ## TODOs

@@ -4,6 +4,7 @@ import json
 import socket
 import subprocess
 import requests
+from typing import Optional
 
 class DingNotifier():
     def __init__(self, hook:str, secure_key=None, host=None, *args, **kwargs):
@@ -63,9 +64,9 @@ def build_notifier_from_cfg(cfg_path:str):
 
 def build_notifier_from_env():
     ''' Build DingNotifier from env var. '''
-    hook    : str | None = os.getenv('CMD_OVEN_HOOK')      # You should get the full web hook of ding's bot manager.
-    sec_key : str | None = os.getenv('CMD_OVEN_SEC_KEY')   # We use secure word to avoid illegal request.
-    host    : str | None = os.getenv('CMD_OVEN_HOST')      # Optional, use this to distinguish different machine.
+    hook    : Optional[str] = os.getenv('CMD_OVEN_HOOK')      # You should get the full web hook of ding's bot manager.
+    sec_key : Optional[str] = os.getenv('CMD_OVEN_SEC_KEY')   # We use secure word to avoid illegal request.
+    host    : Optional[str] = os.getenv('CMD_OVEN_HOST')      # Optional, use this to distinguish different machine.
     if hook is None or not hook.startswith('https://oapi.dingtalk.com/robot/send?access_token='):
         raise ValueError(f'[DingNotify-ERROR] Invalid hook environment variable: $CMD_OVEN_HOOK = {hook}')
     if sec_key is not None and not len(sec_key) > 0:
@@ -85,17 +86,13 @@ def run_command(command):
         # return error
         return e
 
-if __name__ == '__main__':
-    pydir = os.path.dirname(__file__)
-    notifier = build_notifier_from_cfg(os.path.join(pydir, 'config.yaml'))
-    # notifier = build_notifier_from_env()
-
+def ding_single_cmd(notifier:DingNotifier, cmd:str, silent_start:bool=False):
     # START ding!
-    cmd = ' '.join(sys.argv[1:])
     start_msg_lines = []
     start_msg_lines.append(f'🔥 `{cmd}`')
     start_msg = '\n\n'.join(start_msg_lines)
-    notifier.send_str(start_msg)
+    if not silent_start:
+        notifier.send_str(start_msg)
 
     # run the command
     # ret = os.system(cmd)
@@ -123,4 +120,32 @@ if __name__ == '__main__':
         finish_msg_lines.append(f'🔔 Done!')
 
     finish_msg = '\n\n'.join(finish_msg_lines)
-    resp = notifier.send_str(finish_msg)
+    return notifier.send_str(finish_msg)
+
+def ding_single_log(notifier:DingNotifier, msg:str):
+    # START ding!
+    msg = f'📜 {msg}'
+    return notifier.send_str(msg)
+
+
+if __name__ == '__main__':
+    pydir = os.path.dirname(__file__)
+    notifier = build_notifier_from_cfg(os.path.join(pydir, 'config.yaml'))
+    # notifier = build_notifier_from_env()
+
+    # If the option
+    if sys.argv[1][0] == "-":
+        option = sys.argv[1]
+        tmp = ' '.join(sys.argv[2:])
+    else:
+        option = "-r"
+        tmp = ' '.join(sys.argv[1:])
+
+    if option == "-r":
+        ding_single_cmd(notifier, tmp)
+    elif option == "-rs":
+        ding_single_cmd(notifier, tmp, True)
+    elif option == "-l":
+        ding_single_log(notifier, tmp)
+    else:
+        print("Invalid options, use `[-r|-rs]` to run a (start-silent) command or `-l` to send a log.")
