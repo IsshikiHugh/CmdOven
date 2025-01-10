@@ -2,7 +2,13 @@
 
 ExpOven is a notifier application mainly designed for AI researchers. It provides a simple and efficient way to monitor the status of experiments opportunely.
 
+You execute your experiments or commands on the server. When the command is completed or encounters an issue, you will receive a notification in your messaging apps (such as DingTalk, email, Slack, etc.). Additionally, you can use this tool to track the progress of the experiments.
+
 ## Installation
+
+### Step 0. Third Party Setup
+
+- [DingTalk](./docs/third_party_setup/dingtalk.md)
 
 ### Step 1. Install Package
 
@@ -20,9 +26,13 @@ Or simply install with:
 pip install git+https://github.com/IsshikiHugh/ExpOven
 ```
 
-###  Step 2. Edit Configuration
+### Step 2. Edit Configuration
 
 After finishing installation, you need to edit the configuration file. The default configuration file is located at `~/.config/oven/cfg.yaml`. You can also specify the configuration file by setting the environment variable `OVEN_HOME`. If the environment variable is set, the configuration file will be located at `$OVEN_HOME/cfg.yaml`.
+
+The template of the config file is given at [docs/cfg.yaml.temp](./docs/cfg.yaml.temp).
+
+The things to be filled can be found in **[Step 0](#step-0-third-party-setup)**.
 
 ## Quick Start
 
@@ -72,6 +82,7 @@ def bar() -> None:
 The tool is still iterating. Here are some features that I plan to implement in the future:
 
 - [ ] Release control.
+- [ ] Automatic configuration file initialization.
 - More backends supports:
   - [ ] slack
   - [ ] email
