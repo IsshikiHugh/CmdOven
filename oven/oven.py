@@ -88,10 +88,10 @@ class Oven:
         self.cfg = self.cfg[backend]
         self.cfg['backend'] = backend
         if backend == 'dingtalk':
-            from oven.backends.dingtalk import DingtalkBackend, DingtalkExpInfo, DingtalkLogInfo
-            self.ExpInfoClass = DingtalkExpInfo
-            self.LogInfoClass = DingtalkLogInfo
-            self.backend = DingtalkBackend(self.cfg)
+            from oven.backends.dingtalk import DingTalkBackend, DingTalkExpInfo, DingTalkLogInfo
+            self.ExpInfoClass = DingTalkExpInfo
+            self.LogInfoClass = DingTalkLogInfo
+            self.backend = DingTalkBackend(self.cfg)
         else:
             self.ExpInfoClass = ...
             self.LogInfoClass = ...

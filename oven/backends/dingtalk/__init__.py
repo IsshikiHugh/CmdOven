@@ -4,17 +4,17 @@ from typing import Union, Dict
 
 from oven.backends.api import NotifierBackendBase, RespStatus
 
-from .info import DingtalkExpInfo, DingtalkLogInfo
+from .info import DingTalkExpInfo, DingTalkLogInfo
 
 
-class DingtalkBackend(NotifierBackendBase):
+class DingTalkBackend(NotifierBackendBase):
 
     def __init__(self, cfg:Dict):
         self.cfg = cfg
         self.url = cfg['hook']
 
 
-    def notify(self, info:DingtalkExpInfo):
+    def notify(self, info:DingTalkExpInfo):
         '''
         Ask the bot to send raw string message.
         Check docs: https://open.dingtalk.com/document/orgapp/custom-bot-send-message-type#6f14e4d007kju
@@ -48,5 +48,5 @@ class DingtalkBackend(NotifierBackendBase):
         return {
             'host': self.cfg.get('host', None),
             'sec_key': self.cfg['secure_key'],
-            'backend': 'DingtalkBackend'
+            'backend': 'DingTalkBackend'
         }

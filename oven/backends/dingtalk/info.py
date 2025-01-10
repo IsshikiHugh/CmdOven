@@ -15,7 +15,7 @@ def plain2md(text):
 line_split = '\n\n'
 
 
-class DingtalkExpInfo(ExpInfoBase):
+class DingTalkExpInfo(ExpInfoBase):
 
     # ================ #
     # Pre-defined API. #
@@ -75,7 +75,7 @@ class DingtalkExpInfo(ExpInfoBase):
     # =================== #
 
     def get_title(self) -> str:
-        ''' The title is necessary for Dingtalk markdown message. '''
+        ''' The title is necessary for DingTalk markdown message. '''
         return f'[{self.sec_key}] {self.readable_time} @ {self.host}'
 
 
@@ -102,7 +102,7 @@ class DingtalkExpInfo(ExpInfoBase):
         return validated_meta
 
 
-class DingtalkLogInfo(LogInfoBase, DingtalkExpInfo):
+class DingTalkLogInfo(LogInfoBase, DingTalkExpInfo):
 
     # ================ #
     # Pre-defined API. #
