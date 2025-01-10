@@ -36,7 +36,7 @@ The things to be filled can be found in **[Step 0](#step-0-third-party-setup)**.
 
 ## Quick Start
 
-Check [docs/examples.py](./docs/examples.py) for runnable example.s
+Check [docs/examples.py](./docs/examples.py) for runnable examples.
 
 ### As CLI
 
