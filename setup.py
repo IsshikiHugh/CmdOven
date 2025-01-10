@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name ='exp_oven',
+    name ='exp-oven',
     version = '0.1',
     author = 'Yan XIA',
     author_email = '',

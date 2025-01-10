@@ -4,15 +4,23 @@ ExpOven is a notifier application mainly designed for AI researchers. It provide
 
 ## Installation
 
-### Step 1
+### Step 1. Install Package
+
+You can clone the repo and install the package with:
 
 ```shell
 git clone https://github.com/IsshikiHugh/ExpOven.git
 cd ExpOven
-pip install -e .  # Make sure you are in the (virtual) environment that you want to install ExpOven.
+pip install .  # Make sure you are in the (virtual) environment that you want to install ExpOven.
 ```
 
-###  Step 2
+Or simply install with:
+
+```shell
+pip install git+https://github.com/IsshikiHugh/ExpOven
+```
+
+###  Step 2. Edit Configuration
 
 After finishing installation, you need to edit the configuration file. The default configuration file is located at `~/.config/oven/cfg.yaml`. You can also specify the configuration file by setting the environment variable `OVEN_HOME`. If the environment variable is set, the configuration file will be located at `$OVEN_HOME/cfg.yaml`.
 
@@ -63,6 +71,7 @@ def bar() -> None:
 
 The tool is still iterating. Here are some features that I plan to implement in the future:
 
+- [ ] Release control.
 - More backends supports:
   - [ ] slack
   - [ ] email
