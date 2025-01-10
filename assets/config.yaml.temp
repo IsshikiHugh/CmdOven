@@ -1,0 +1,10 @@
+backend: dingtalk  # dingtalk | feishu | slack | ...
+
+dingtalk:
+  # host: <?>  # optional
+  hook: https://oapi.dingtalk.com/robot/send?access_token=<?>
+  secure_key: <?>
+
+# feishu:  # TODO
+
+# slack:  # TODO

@@ -1,3 +1,0 @@
-hook: https://oapi.dingtalk.com/robot/send?access_token=<?>
-secure_key: <?>
-# host: <?> # optional
