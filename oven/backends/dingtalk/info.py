@@ -23,7 +23,7 @@ class DingTalkExpInfo(ExpInfoBase):
 
     def format_information(self) -> str:
         # 1. Format meta information and time.
-        prefix = f'###### {self.readable_time} {self.host}'
+        prefix = f'###### {self.readable_time} @ {self.host}'
         # 2. Format current description information.
         msg = self.current_description
         # 3. Concatenate the above two information and return.
@@ -110,7 +110,7 @@ class DingTalkLogInfo(LogInfoBase, DingTalkExpInfo):
 
     def format_information(self) -> str:
         # 1. Format meta information and time.
-        prefix = f'###### {self.readable_time} {self.host}'
+        prefix = f'###### {self.readable_time} @ {self.host}'
         # 2. Format current description information.
         msg = self.current_description
         # 3. Concatenate the above two information and return.
