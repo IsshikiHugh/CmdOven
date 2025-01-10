@@ -1,5 +1,4 @@
 import time
-import sys
 import subprocess
 
 import oven
