@@ -114,14 +114,13 @@ def build_oven(cfg_path:Union[Path, str]=None, raise_err:bool=False) -> Oven:
     except Exception as e:
         # Generate tips.
         searched_paths = f'\n- {cfg_path}'
-        print(f'Oven configuration file not found or invalid. Searched paths: {searched_paths}')
+        print(f'Oven configuration file not found or invalid: {searched_paths}')
         print(f'You are suggested to set the environment variable `OVEN_HOME` to the directory containing the `cfg.yaml`, or ensure the validity of config files mentioned.')
+        print(f'Error: {e}')
 
-        traceback.print_exc()
         if raise_err:
+            traceback.print_exc()
             raise e
+        else:
+            exit(1)
     return oven
-
-oven = build_oven()
-
-

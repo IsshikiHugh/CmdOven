@@ -17,7 +17,7 @@ class NotifierBackendBase:
 
 
     def __init__(self, cfg:Dict) -> None:
-        ''' Read necessary information from config file. '''
+        ''' Read necessary information from config file. And validate the configuration. '''
         pass
 
 
