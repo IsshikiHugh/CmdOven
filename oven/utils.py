@@ -36,7 +36,7 @@ def dump_cfg_temp(overwrite:bool=False) -> Union[str, Path]:
 
 
 def print_manual() -> None:
-    manual_path = __file__.replace('oven/utils.py', 'docs/manual.txt')
+    manual_path = __file__.replace('utils.py', 'manual.txt')
     with open(manual_path, 'r') as f:
         manual = f.read()
     return print(manual)

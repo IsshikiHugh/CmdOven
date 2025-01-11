@@ -3,11 +3,12 @@ from setuptools import setup, find_packages
 
 setup(
     name ='exp-oven',
-    version = '0.1',
+    version = '0.2',
     author = 'Yan XIA',
     author_email = '',
     packages = find_packages(),
     package_dir = { 'oven': 'oven' },
+    package_data = { 'oven': ['manual.txt'] },
     description = 'Experiments monitor and notification utilities.',
     classifiers = [
             'Programming Language :: Python :: 3',
