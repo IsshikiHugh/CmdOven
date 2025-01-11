@@ -1,5 +1,7 @@
 # ExpOven
 
+<center><img src="https://github.com/user-attachments/assets/c478b73c-4f7b-4b7d-bd26-28522892fb98"></center>
+
 ExpOven is a notifier application mainly designed for AI researchers. It provides a simple and efficient way to monitor the status of experiments opportunely.
 
 You execute your experiments or commands on the server. When the command is completed or encounters an issue, you will receive a notification in your messaging apps (such as DingTalk, email, Slack, etc.). Additionally, you can use this tool to track the progress of the experiments.
