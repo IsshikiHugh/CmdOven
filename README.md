@@ -46,7 +46,10 @@ Check [docs/examples.py](./docs/examples.py) for runnable examples.
 ding [LOGGING MESSAGE]
 # eg:
 ding 'Hello World!'
+mv from to ; ding 'Data moved.'  # Similar to `bake mv from to`.
 ```
+
+Tips: When you have already started the experiment, you can still print type `ding 'Exp xxx stopped.'` and press Enter. Although it seems you don't send the command correctly, it's actually put into the queue. When the experiment is over, the command will still be executed.
 
 <center><img src="docs/eg_ding_dingtalk.png" width="50%"></center>
 
@@ -54,6 +57,9 @@ ding 'Hello World!'
 bake [RUNNABLE COMMAND]
 # eg:
 bake echo 'Hello World!'
+bake pip install -r requirements.txt
+bake bash scripts/download_data.sh
+bake CUDA_VISIBLE_DEVICES='0,1' python train.py
 ```
 
 <center><img src="docs/eg_bake_dingtalk.png" width="50%"></center>
@@ -61,10 +67,25 @@ bake echo 'Hello World!'
 ### As Package
 
 As a single function, it notifies the message. The two forms are equivalent.
-```py
 
+```py
 oven.notify('Hello World!')
 oven.ding('Hello World!')
+
+# eg:
+
+def compute_loss(gt, pd):
+    loss = (gt - pd).abs().mean()  # (,)
+    if torch.isnan(loss).any():
+        oven.notify('Loss contains NaN.')  # 👈
+        ipdb.set_trace()
+    return loss
+
+def main():
+    model = Model()
+    train(model)
+    metric = evaluate(model)
+    oven.notify(f'Train over with metric: {metric}')  # 👈
 ```
 
 As function wrapper, the notifier will be called both before and after the function is executed. The two forms are equivalent.
@@ -77,6 +98,15 @@ def foo() -> None:
 @oven.bake
 def bar() -> None:
     print('Hello World!')
+
+# eg:
+
+@oven.monitor  # 👈
+def train() -> None:
+    for epoch in range(10):
+        train_before_epoch()
+        train_epoch()
+        train_after_epoch()
 ```
 
 ## TODOs
