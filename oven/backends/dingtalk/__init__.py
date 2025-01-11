@@ -10,9 +10,15 @@ from .info import DingTalkExpInfo, DingTalkLogInfo
 class DingTalkBackend(NotifierBackendBase):
 
     def __init__(self, cfg:Dict):
+        # Validate the configuration.
+        assert 'hook' in cfg and 'access_token=<?>' not in cfg['hook'], \
+            'Please ensure the validity of "dingtalk.hook" field in the configuration file!'
+        assert 'secure_key' in cfg and '<?>' not in cfg['secure_key'], \
+            'Please ensure the validity of "dingtalk.secure_key" field in the configuration file!'
+
+        # Setup.
         self.cfg = cfg
         self.url = cfg['hook']
-
 
     def notify(self, info:DingTalkExpInfo):
         '''

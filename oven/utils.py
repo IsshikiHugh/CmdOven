@@ -3,13 +3,12 @@ import requests
 from typing import Union
 from pathlib import Path
 
-from oven.consts import cfg_temp_url, default_cfg_home
-
 def get_home_path() -> Path:
     home_path = None
     if 'OVEN_HOME' in os.environ:
         home_path = Path(os.environ['OVEN_HOME'])
     else:
+        from oven.consts import default_cfg_home
         home_path = Path(default_cfg_home)
     return home_path
 
@@ -19,6 +18,7 @@ def get_cfg_path() -> Path:
 
 
 def get_cfg_temp() -> str:
+    from oven.consts import cfg_temp_url
     return requests.get(cfg_temp_url).text
 
 

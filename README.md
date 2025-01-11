@@ -82,13 +82,13 @@ def bar() -> None:
 The tool is still iterating. Here are some features that I plan to implement in the future:
 
 - [ ] Release control.
-- [ ] Automatic configuration file initialization.
+- [x] Automatic configuration file initialization.
 - More backends supports:
   - [ ] slack
   - [ ] email
   - [ ] feishu
-- More friendly API:
-  - [ ] Make `@monitor`/`@bake` supports additional information.
-  - [ ] Make progress signal explicitly available.
+- More friendly API.
+
+## Contribution
 
 Also, I leave some design details at [docs/docs.md](./docs/docs.md). Any suggestions and contributions are welcome!

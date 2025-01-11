@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name ='exp-oven',
-    version = '0.2',
+    version = '0.3',
     author = 'Yan XIA',
     author_email = '',
     packages = find_packages(),
@@ -22,9 +22,9 @@ setup(
     ],
     entry_points = {
         'console_scripts': [
-            'oven = oven.__init__:cli_full',  # Full version of CLI.
-            'bake = oven.__init__:cli_cmd',  # Shortcuts for baking a command.
-            'ding = oven.__init__:cli_log',  # Shortcuts for logging.
+            'oven = oven.cli:oven',  # Full version of CLI.
+            'bake = oven.cli:bake',  # Shortcuts for baking a command.
+            'ding = oven.cli:ding',  # Shortcuts for logging.
         ],
     },
 )

@@ -1,16 +1,14 @@
-import sys
-from typing import Callable
+from typing import Callable, Optional
 
 from oven.oven import Oven, build_oven
-from oven.utils import (
-    dump_cfg_temp,
-    get_home_path,
-    print_manual,
-    error_redirect_to_manual,
-)
 
 # Global oven.
-oven:Oven = build_oven()
+_lazy_oven_obj:Optional[Oven] = None
+def get_lazy_oven() -> Optional[Oven]:
+    global _lazy_oven_obj
+    if _lazy_oven_obj is None:
+        _lazy_oven_obj = build_oven()
+    return _lazy_oven_obj
 
 
 # =================================== #
@@ -19,7 +17,7 @@ oven:Oven = build_oven()
 
 def monitor(func) -> Callable:
     '''
-    Notifier decorator for a function. 
+    Notifier decorator for a function.
 
     Usage:
     ```
@@ -34,8 +32,7 @@ def monitor(func) -> Callable:
         ...
     ```
     '''
-    global oven
-    return oven.ding_func(func)
+    return get_lazy_oven().ding_func(func)
 
 
 def notify(msg:str) -> None:
@@ -51,47 +48,9 @@ def notify(msg:str) -> None:
     @oven.ding('Hello World!')
     ```
     '''
-    global oven
-    return oven.ding_log(msg)
+    return get_lazy_oven().ding_log(msg)
 
 
 # 🍟 Interesting alias just for fun, these alias are aligned with CLI.
 bake = monitor  # @oven.bake = @oven.monitor
 ding = notify   # oven.ding(...) = oven.notify(...)
-
-
-# =============================== #
-# CLI utils for command line use. #
-# =============================== #
-
-def cli_log() -> None:
-    ''' CLI command `ding`. '''
-    log = ' '.join(sys.argv[1:])
-    return notify(log)
-
-
-def cli_cmd() -> None:
-    ''' CLI command `bake`. '''
-    cmd = ' '.join(sys.argv[1:])
-    return oven.ding_cmd(cmd)
-
-
-def cli_full() -> None:
-    ''' CLI command `oven`. '''
-    action = sys.argv[1]
-    args = sys.argv[2:]
-
-    if action == 'help':
-        return print_manual()
-    elif action == 'ding':
-        return notify(' '.join(args))
-    elif action == 'bake':
-        return oven.ding_cmd(' '.join(args))
-    elif action == 'init-cfg':
-        return dump_cfg_temp(overwrite=False)
-    elif action == 'reset-cfg':
-        return dump_cfg_temp(overwrite=True)
-    elif action == 'home':
-        return print(get_home_path())
-    else:
-        return error_redirect_to_manual(action)
