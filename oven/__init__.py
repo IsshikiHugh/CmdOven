@@ -3,7 +3,7 @@ from typing import Callable, Optional
 from oven.oven import Oven, build_oven
 
 # Global oven.
-_lazy_oven_obj:Oven = None
+_lazy_oven_obj:Optional[Oven] = None
 def get_lazy_oven() -> Optional[Oven]:
     global _lazy_oven_obj
     if _lazy_oven_obj is None:
