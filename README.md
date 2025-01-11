@@ -81,7 +81,6 @@ def bar() -> None:
 
 The tool is still iterating. Here are some features that I plan to implement in the future:
 
-- [ ] Release control.
 - [x] Automatic configuration file initialization.
 - More backends supports:
   - [ ] slack
