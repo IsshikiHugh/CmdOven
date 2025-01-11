@@ -21,8 +21,9 @@ setup(
     ],
     entry_points = {
         'console_scripts': [
-            'bake = oven.__init__:cli_cmd',  # Oven a command.
-            'ding = oven.__init__:cli_log',  # Single log.
+            'oven = oven.__init__:cli_full',  # Full version of CLI.
+            'bake = oven.__init__:cli_cmd',  # Shortcuts for baking a command.
+            'ding = oven.__init__:cli_log',  # Shortcuts for logging.
         ],
     },
 )

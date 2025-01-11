@@ -2,6 +2,12 @@ import sys
 from typing import Callable
 
 from oven.oven import Oven, build_oven
+from oven.utils import (
+    dump_cfg_temp,
+    get_home_path,
+    print_manual,
+    error_redirect_to_manual,
+)
 
 # Global oven.
 oven:Oven = build_oven()
@@ -58,13 +64,34 @@ ding = notify   # oven.ding(...) = oven.notify(...)
 # CLI utils for command line use. #
 # =============================== #
 
-def get_arg() -> str:
-    return ' '.join(sys.argv[1:])
-
-
 def cli_log() -> None:
-    return notify(get_arg())
+    ''' CLI command `ding`. '''
+    log = ' '.join(sys.argv[1:])
+    return notify(log)
 
 
 def cli_cmd() -> None:
-    return oven.ding_cmd(get_arg())
+    ''' CLI command `bake`. '''
+    cmd = ' '.join(sys.argv[1:])
+    return oven.ding_cmd(cmd)
+
+
+def cli_full() -> None:
+    ''' CLI command `oven`. '''
+    action = sys.argv[1]
+    args = sys.argv[2:]
+
+    if action == 'help':
+        return print_manual()
+    elif action == 'ding':
+        return notify(' '.join(args))
+    elif action == 'bake':
+        return oven.ding_cmd(' '.join(args))
+    elif action == 'init-cfg':
+        return dump_cfg_temp(overwrite=False)
+    elif action == 'reset-cfg':
+        return dump_cfg_temp(overwrite=True)
+    elif action == 'home':
+        return print(get_home_path())
+    else:
+        return error_redirect_to_manual(action)

@@ -4,7 +4,9 @@ import subprocess
 from typing import Type, Callable, Any, List, Union
 from pathlib import Path
 from omegaconf import OmegaConf
+
 from oven.backends.api import NotifierBackendBase, ExpInfoBase, LogInfoBase, Signal
+from oven.utils import get_cfg_path
 
 class Oven:
     def __init__(self, cfg) -> None:
@@ -100,17 +102,8 @@ class Oven:
 
 
 
-default_cfg_path = Path.home() / '.config' / 'oven' / 'cfg.yaml'
 def build_oven(cfg_path:Union[Path, str]=None, raise_err:bool=False) -> Oven:
-    # 1. Search if Oven configuration path is defined environment variable.
-    env_cfg_path = None
-    if 'OVEN_HOME' in os.environ:
-        env_cfg_path = Path(os.environ['OVEN_HOME']) / 'cfg.yaml'
-        cfg_path = env_cfg_path
-    else:
-        cfg_path = default_cfg_path
-
-    # 2. Load config.
+    cfg_path = get_cfg_path()
     oven = None
 
     try:

@@ -1,0 +1,23 @@
+🍟 == ExpOven Manual == 🍟
+Before start, please setup the configuration file according to the instructions.
+GitHub Repo: https://github.com/IsshikiHugh/ExpOven
+
+🔍 == Usage == 🔍
+Shortcuts:
+  ding <message>    Directly notify with a message.
+                    eg: ding "Hello World!"
+  bake <command>    Use notifier to monitor the status of the command. When the command is
+                    started or terminated, the notifier will send a message.
+                    eg: bake python train.py --exp_name='debug'
+
+Full:
+  oven [actions] <actions-args>
+    Actions:
+      help              Show the manual.
+      ding <message>    The same as the shortcut "ding".
+                        eg: oven ding "Hello World!"
+      bake <command>    The same as the shortcut "bake".
+                        eg: oven bake python train.py --exp_name='debug'
+      init-cfg          Create and initialize the configuration file.
+      reset-cfg         Overwrite and reset the configuration file.
+      home              Display the detected home directory.
