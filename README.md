@@ -115,9 +115,10 @@ The tool is still iterating. Here are some features that I plan to implement in 
 
 - [x] Automatic configuration file initialization.
 - More backends supports:
+  - [ ] telegram
   - [ ] slack
-  - [ ] email
   - [ ] feishu
+  - [ ] email
 - More friendly API.
 
 ## Contribution
