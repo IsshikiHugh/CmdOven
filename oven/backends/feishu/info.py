@@ -12,18 +12,26 @@ class FeishuExpInfo(ExpInfoBase):
 
     def format_information(self) -> dict:
         # Never send empty paragraph, it would be ugly.
-        content = []
+        element = []
         parts = [self.exp_info, self.aux_info, self.current_description]
         for part in parts:
             if len(part) > 0:
-                content.append([{
-                    "tag": "text",
-                    "text": part,
-                }])
+                element.append({
+                    "tag": "markdown",
+                    "content": part,
+                })
 
         information = {
-            "title": f'{self.readable_time} @ {self.host}',
-            "content": content,
+            "schema": "2.0",
+            "header": {
+                "title": {
+                    "content": f'{self.readable_time} @ {self.host}',
+                    "tag": "plain_text",
+                }
+            },
+            "body": {
+                "elements": element,
+            }
         }
         return information
 
@@ -98,13 +106,19 @@ class FeishuLogInfo(LogInfoBase, FeishuExpInfo):
 
     def format_information(self) -> dict:
         information = {
-            "title": f'{self.readable_time} @ {self.host}',
-            "content": [
-                [{
-                    "tag": "text",
-                    "text": self.current_description,
-                }],
-            ]
+            "schema": "2.0",
+            "header": {
+                "title": {
+                    "content": f'{self.readable_time} @ {self.host}',
+                    "tag": "plain_text",
+                },
+            },
+            "body": {
+                "elements": [{
+                    "tag": "markdown",
+                    "content": self.current_description,
+                }]
+            }
         }
         return information
 
