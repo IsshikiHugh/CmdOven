@@ -117,7 +117,6 @@ The tool is still iterating. Here are some features that I plan to implement in 
 - More backends supports:
   - [ ] telegram
   - [ ] slack
-  - [ ] feishu
   - [ ] email
 - More friendly API.
 
