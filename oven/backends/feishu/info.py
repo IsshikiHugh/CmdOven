@@ -4,6 +4,13 @@ from typing import Union, Dict
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
 
 
+def lines2reply(lines):
+    ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
+    if lines == ['']:
+        return ''
+    return '> ' + '\n>\n> '.join(lines).strip()
+
+
 class FeishuExpInfo(ExpInfoBase):
 
     # ================ #
@@ -52,11 +59,11 @@ class FeishuExpInfo(ExpInfoBase):
         # Format the information for later use.
         self.current_description = self.current_description
         if self.current_signal == Signal.S:
-            self.exp_info = f'🔥 `{self.cmd}`\n' + (self.current_description)
+            self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(self.current_description.split('\n'))
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
-            self.exp_info = self.exp_info_backup
+            self.exp_info = lines2reply(self.exp_info_backup)
 
             cost_info = f'⏱️ **Time Cost**: {str(self.current_timestamp - self.start_timestamp)}s.'
             if self.current_signal == Signal.P:
