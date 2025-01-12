@@ -11,6 +11,7 @@ You execute your experiments or commands on the server. When the command is comp
 ### Step 0. Third Party Setup
 
 - [DingTalk](./docs/third_party_setup/dingtalk.md)
+- [Feishu(Lark)](./docs/third_party_setup/feishu.md)
 
 ### Step 1. Install Package
 
