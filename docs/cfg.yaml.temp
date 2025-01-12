@@ -6,6 +6,7 @@ dingtalk:
   secure_key: <?>
 
 feishu:
+  # host: <?>  # optional
   hook: https://open.feishu.cn/open-apis/bot/v2/hook/<?>
   signature: <?>
 

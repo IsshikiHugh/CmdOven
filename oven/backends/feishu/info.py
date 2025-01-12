@@ -11,22 +11,19 @@ class FeishuExpInfo(ExpInfoBase):
     # ================ #
 
     def format_information(self) -> dict:
+        # Never send empty paragraph, it would be ugly.
+        content = []
+        parts = [self.exp_info, self.aux_info, self.current_description]
+        for part in parts:
+            if len(part) > 0:
+                content.append([{
+                    "tag": "text",
+                    "text": part
+                }])
+
         information = {
             "title": f'{self.readable_time} @ {self.host}',
-            "content": [
-                [{
-                    "tag": "text",
-                    "text": self.exp_info
-                }],
-                [{
-                    "tag": "text",
-                    "text": self.aux_info
-                }],
-                [{
-                    "tag": "text",
-                    "text": self.current_description
-                }]
-            ]
+            "content": content,
         }
         return information
 
@@ -47,7 +44,7 @@ class FeishuExpInfo(ExpInfoBase):
         # Format the information for later use.
         self.current_description = self.current_description
         if self.current_signal == Signal.S:
-            self.exp_info = f'🔥 `{self.cmd}`\n\n' + (self.current_description)
+            self.exp_info = f'🔥 `{self.cmd}`\n' + (self.current_description)
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
@@ -110,7 +107,7 @@ class FeishuLogInfo(LogInfoBase, FeishuExpInfo):
             ]
         }
         return information
-    
+
     def custom_signal_handler(self) -> None:
         # Initialization.
         if self.current_signal == Signal.I:
