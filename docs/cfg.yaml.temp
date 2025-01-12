@@ -5,7 +5,9 @@ dingtalk:
   hook: https://oapi.dingtalk.com/robot/send?access_token=<?>
   secure_key: <?>
 
-# feishu:  # TODO
+feishu:
+  hook: https://open.feishu.cn/open-apis/bot/v2/hook/<?>
+  signature: <?>
 
 # slack:  # TODO
 
