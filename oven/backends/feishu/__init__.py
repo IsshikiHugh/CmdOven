@@ -45,15 +45,15 @@ class FeishuBackend(NotifierBackendBase):
         timestamp = int(datetime.now().timestamp())
 
         formatted_data = {
-            "timestamp": timestamp,
-            "sign": sign,
-            "msg_type": "post",
-            "content": {
-                "post": {
-                    "en_us": info.format_information(),
+                "timestamp": timestamp,
+                "sign": sign,
+                "msg_type": "post",
+                "content": {
+                    "post": {
+                        "en_us": info.format_information(),
+                    }
                 }
             }
-        }
         # 2. Post request and get response.
         try:
             resp = requests.post(self.url, json=formatted_data)

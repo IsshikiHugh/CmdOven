@@ -18,7 +18,7 @@ class FeishuExpInfo(ExpInfoBase):
             if len(part) > 0:
                 content.append([{
                     "tag": "text",
-                    "text": part
+                    "text": part,
                 }])
 
         information = {
@@ -102,7 +102,7 @@ class FeishuLogInfo(LogInfoBase, FeishuExpInfo):
             "content": [
                 [{
                     "tag": "text",
-                    "text": self.current_description
+                    "text": self.current_description,
                 }],
             ]
         }
