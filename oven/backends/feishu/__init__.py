@@ -7,10 +7,10 @@ import hmac
 from datetime import datetime
 from oven.backends.api import NotifierBackendBase, RespStatus
 
-from .info import FeiShuExpInfo, FeiShuLogInfo
+from .info import FeishuExpInfo, FeishuLogInfo
 
 
-class FeiShuBackend(NotifierBackendBase):
+class FeishuBackend(NotifierBackendBase):
 
     def __init__(self, cfg:Dict):
         # Validate the configuration.
@@ -34,7 +34,7 @@ class FeiShuBackend(NotifierBackendBase):
         return sign
     
     
-    def notify(self, info:FeiShuExpInfo):
+    def notify(self, info:FeishuExpInfo):
         '''
         Ask the bot to send raw string message.
         Check docs: https://www.feishu.cn/hc/zh-CN/category/7177281426289704962-%E9%A3%9E%E4%B9%A6%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8A%A9%E6%89%8B
@@ -70,6 +70,6 @@ class FeiShuBackend(NotifierBackendBase):
         ''' Generate meta information for information object. '''
         return {
             'host': self.cfg.get('host', None),
-            'sec_key': self.cfg['secure_key'],
-            'backend': 'FeiShuBackend'
+            'signature': self.cfg.get('signature', None),
+            'backend': 'FeishuBackend'
         }
