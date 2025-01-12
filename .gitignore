@@ -1,5 +1,6 @@
 .vscode
 config.yaml
+cfg.yaml
 __pycache__
 *.egg-info
 .DS_Store
