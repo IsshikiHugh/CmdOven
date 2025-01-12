@@ -3,19 +3,8 @@ from typing import Union, Dict
 
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
 
-def lines2reply(lines):
-    ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
-    return '> ' + '\n>\n> '.join(lines).strip()
 
-
-def plain2md(text):
-    text = text.strip().replace('\n', '\n\n')
-    return text
-
-line_split = '\n\n'
-
-
-class FeiShuExpInfo(ExpInfoBase):
+class FeishuExpInfo(ExpInfoBase):
 
     # ================ #
     # Pre-defined API. #
@@ -49,14 +38,14 @@ class FeiShuExpInfo(ExpInfoBase):
             # Update the meta information to member variables.
             self.host = self.exp_meta_info['host']
             self.cmd = self.exp_meta_info['cmd']
-            self.sec_key = self.exp_meta_info['sec_key']
+            self.signature = self.exp_meta_info['signature']
             return
 
         # Format the time anyway.
         self.readable_time = time.strftime('%a %d %b %Y %I:%M:%S %p %Z', time.localtime(self.current_timestamp))
 
         # Format the information for later use.
-        self.current_description = plain2md(self.current_description)
+        self.current_description = self.current_description
         if self.current_signal == Signal.S:
             self.exp_info = f'🔥 `{self.cmd}`\n\n' + (self.current_description)
             self.exp_info_backup = self.exp_info
@@ -82,11 +71,6 @@ class FeiShuExpInfo(ExpInfoBase):
     # Customized methods. #
     # =================== #
 
-    def get_title(self) -> str:
-        ''' The title is necessary for FeiShu markdown message. '''
-        return f'[{self.sec_key}] {self.readable_time} @ {self.host}'
-
-
     # ================ #
     # Utils functions. #
     # ================ #
@@ -100,17 +84,16 @@ class FeiShuExpInfo(ExpInfoBase):
         else:
             host = f'{custom_host}({default_host})'
         host = host.strip()
-
         # Return the validated meta information.
         validated_meta = {
-                'host': host,
-                'cmd': self.exp_meta_info['cmd'],
-                'sec_key': self.exp_meta_info['sec_key'],
-            }
+            'host': host,
+            'cmd': self.exp_meta_info['cmd'],
+            'signature': self.exp_meta_info['signature'],
+        }
         return validated_meta
 
 
-class FeiShuLogInfo(LogInfoBase, FeiShuExpInfo):
+class FeishuLogInfo(LogInfoBase, FeishuExpInfo):
 
     # ================ #
     # Pre-defined API. #
@@ -134,7 +117,7 @@ class FeiShuLogInfo(LogInfoBase, FeiShuExpInfo):
             self.exp_meta_info = self._init_meta()
             # Update the meta information to member variables.
             self.host = self.exp_meta_info['host']
-            self.sec_key = self.exp_meta_info['sec_key']
+            self.signature = self.exp_meta_info['signature']
             return
 
         # Format the time anyway.
