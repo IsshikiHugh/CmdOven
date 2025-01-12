@@ -50,6 +50,12 @@ def notify(msg:str) -> None:
     '''
     return get_lazy_oven().ding_log(msg)
 
+def ding_cmd(cmd:str) -> None:
+    '''
+    Notify a command execution.
+    '''
+    return get_lazy_oven().ding_cmd(cmd)
+
 
 # 🍟 Interesting alias just for fun, these alias are aligned with CLI.
 bake = monitor  # @oven.bake = @oven.monitor
