@@ -94,6 +94,11 @@ class Oven:
             self.ExpInfoClass = DingTalkExpInfo
             self.LogInfoClass = DingTalkLogInfo
             self.backend = DingTalkBackend(self.cfg)
+        elif backend == 'feishu':
+            from oven.backends.feishu import FeishuBackend, FeishuExpInfo, FeishuLogInfo
+            self.ExpInfoClass = FeishuExpInfo
+            self.LogInfoClass = FeishuLogInfo
+            self.backend = FeishuBackend(self.cfg)
         else:
             self.ExpInfoClass = ...
             self.LogInfoClass = ...
