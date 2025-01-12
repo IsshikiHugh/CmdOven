@@ -4,6 +4,13 @@ from typing import Union, Dict
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
 
 
+def lines2reply(lines):
+    ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
+    if lines == ['']:
+        return ''
+    return '> ' + '\n>\n> '.join(lines).strip()
+
+
 class FeishuExpInfo(ExpInfoBase):
 
     # ================ #
@@ -12,18 +19,26 @@ class FeishuExpInfo(ExpInfoBase):
 
     def format_information(self) -> dict:
         # Never send empty paragraph, it would be ugly.
-        content = []
+        element = []
         parts = [self.exp_info, self.aux_info, self.current_description]
         for part in parts:
             if len(part) > 0:
-                content.append([{
-                    "tag": "text",
-                    "text": part,
-                }])
+                element.append({
+                    "tag": "markdown",
+                    "content": part,
+                })
 
         information = {
-            "title": f'{self.readable_time} @ {self.host}',
-            "content": content,
+            "schema": "2.0",
+            "header": {
+                "title": {
+                    "content": f'{self.readable_time} @ {self.host}',
+                    "tag": "plain_text",
+                }
+            },
+            "body": {
+                "elements": element,
+            }
         }
         return information
 
@@ -44,11 +59,11 @@ class FeishuExpInfo(ExpInfoBase):
         # Format the information for later use.
         self.current_description = self.current_description
         if self.current_signal == Signal.S:
-            self.exp_info = f'🔥 `{self.cmd}`\n' + (self.current_description)
+            self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(self.current_description.split('\n'))
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
-            self.exp_info = self.exp_info_backup
+            self.exp_info = lines2reply(self.exp_info_backup)
 
             cost_info = f'⏱️ **Time Cost**: {str(self.current_timestamp - self.start_timestamp)}s.'
             if self.current_signal == Signal.P:
@@ -98,13 +113,19 @@ class FeishuLogInfo(LogInfoBase, FeishuExpInfo):
 
     def format_information(self) -> dict:
         information = {
-            "title": f'{self.readable_time} @ {self.host}',
-            "content": [
-                [{
-                    "tag": "text",
-                    "text": self.current_description,
-                }],
-            ]
+            "schema": "2.0",
+            "header": {
+                "title": {
+                    "content": f'{self.readable_time} @ {self.host}',
+                    "tag": "plain_text",
+                },
+            },
+            "body": {
+                "elements": [{
+                    "tag": "markdown",
+                    "content": self.current_description,
+                }]
+            }
         }
         return information
 

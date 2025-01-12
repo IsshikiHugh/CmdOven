@@ -47,12 +47,8 @@ class FeishuBackend(NotifierBackendBase):
         formatted_data = {
                 "timestamp": timestamp,
                 "sign": sign,
-                "msg_type": "post",
-                "content": {
-                    "post": {
-                        "en_us": info.format_information(),
-                    }
-                }
+                "msg_type": "interactive",
+                "card": info.format_information(),
             }
         # 2. Post request and get response.
         try:
