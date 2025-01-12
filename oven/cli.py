@@ -11,7 +11,7 @@ def bake() -> None:
     ''' CLI command `bake`. '''
     import oven
     cmd = ' '.join(sys.argv[1:])
-    return oven.ding_cmd(cmd)
+    return oven.get_lazy_oven().ding_cmd(cmd)
 
 
 def oven() -> None:
@@ -27,7 +27,7 @@ def oven() -> None:
         return oven.notify(' '.join(args))
     elif action == 'bake':
         import oven
-        return oven.ding_cmd(' '.join(args))
+        return oven.get_lazy_oven().ding_cmd(' '.join(args))
     elif action == 'init-cfg':
         from oven.utils import dump_cfg_temp
         return dump_cfg_temp(overwrite=False)

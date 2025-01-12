@@ -16,13 +16,13 @@ class FeishuBackend(NotifierBackendBase):
         # Validate the configuration.
         assert 'hook' in cfg and 'access_token=<?>' not in cfg['hook'], \
             'Please ensure the validity of "feishu.hook" field in the configuration file!'
-        assert 'secure_key' in cfg and '<?>' not in cfg['secure_key'], \
-            'Please ensure the validity of "feishu.secure_key" field in the configuration file!'
+        assert 'signature' in cfg and '<?>' not in cfg['signature'], \
+            'Please ensure the validity of "feishu.signature" field in the configuration file!'
 
         # Setup.
         self.cfg = cfg
         self.url = cfg['hook']
-        self.secret = cfg['secure_key']
+        self.secret = cfg['signature']
 
     def _gen_sign(self, secret):
         timestamp = int(datetime.now().timestamp())
@@ -32,8 +32,8 @@ class FeishuBackend(NotifierBackendBase):
         ).digest()
         sign = base64.b64encode(hmac_code).decode('utf-8')
         return sign
-    
-    
+
+
     def notify(self, info:FeishuExpInfo):
         '''
         Ask the bot to send raw string message.
@@ -45,22 +45,22 @@ class FeishuBackend(NotifierBackendBase):
         timestamp = int(datetime.now().timestamp())
 
         formatted_data = {
-            "timestamp": timestamp,
-            "sign": sign,
-            "msg_type": "post",
-            "content": {
-                "post": {
-                    "en_us": info.format_information(),
+                "timestamp": timestamp,
+                "sign": sign,
+                "msg_type": "post",
+                "content": {
+                    "post": {
+                        "en_us": info.format_information(),
+                    }
                 }
             }
-        }
         # 2. Post request and get response.
         try:
             resp = requests.post(self.url, json=formatted_data)
             resp_dict = json.loads(resp.text)
         except:
             resp_dict = {}
-            
+
         # 3. Return response dict.
         resp_status = RespStatus(has_err=True, meta={})  # TODO: fill in the response status, since its not implemented, 'has_err' is always True.
         return resp_status
