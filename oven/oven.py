@@ -99,6 +99,11 @@ class Oven:
             self.ExpInfoClass = FeishuExpInfo
             self.LogInfoClass = FeishuLogInfo
             self.backend = FeishuBackend(self.cfg)
+        elif backend == 'email':
+            from oven.backends.email import EmailBackend, EmailExpInfo, EmailLogInfo
+            self.ExpInfoClass = EmailExpInfo
+            self.LogInfoClass = EmailLogInfo
+            self.backend = EmailBackend(self.cfg)
         else:
             self.ExpInfoClass = ...
             self.LogInfoClass = ...
