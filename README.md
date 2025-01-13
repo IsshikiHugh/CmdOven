@@ -114,15 +114,19 @@ def train() -> None:
 
 The tool is still iterating. Here are some features that I plan to implement in the future:
 
-- [x] Automatic configuration file initialization.
 - More backends supports:
-  - [ ] telegram
-  - [ ] slack
-  - [ ] [bark](https://github.com/Finb/Bark)
-  - [x] feishu
-  - [ ] email
+  - telegram
+  - slack
+  - [bark](https://github.com/Finb/Bark)
+  - email
 - More friendly API.
 
 ## Contribution
 
-Also, I leave some design details at [docs/docs.md](./docs/docs.md). Any suggestions and contributions are welcome!
+Thank you for contributing!
+
+I leave some design details at [docs/docs.md](./docs/docs.md). The implementation of [DingTalk backend](./oven/backends/dingtalk/__init__.py) should be a good example.
+
+According to [this](https://stackoverflow.com/questions/35278957/can-i-modify-someone-elses-pull-request-and-push-it-back-in-its-branch/49854013#49854013), I *recommend* you to check "Allow edits from maintainers." when you open the pull request.
+
+Any suggestions (as well as new feature requests) and contributions are welcome!

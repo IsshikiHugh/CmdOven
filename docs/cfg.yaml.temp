@@ -1,4 +1,4 @@
-backend: dingtalk  # dingtalk | feishu | slack | ...
+backend: dingtalk  # dingtalk | feishu | slack | bark | telegram | email | ...
 
 dingtalk:
   # host: <?>  # optional
@@ -10,6 +10,4 @@ feishu:
   hook: https://open.feishu.cn/open-apis/bot/v2/hook/<?>
   signature: <?>
 
-# slack:  # TODO
-
-# email:  # TODO
+version: 1.2.0  # version of cfg template

@@ -1,7 +1,9 @@
 import os
-import requests
 from typing import Union
 from pathlib import Path
+
+from .cfg import get_cfg_temp, modify_cfg_with_new_backend
+
 
 def get_home_path() -> Path:
     home_path = None
@@ -17,11 +19,6 @@ def get_cfg_path() -> Path:
     return get_home_path() / 'cfg.yaml'
 
 
-def get_cfg_temp() -> str:
-    from oven.consts import cfg_temp_url
-    return requests.get(cfg_temp_url).text
-
-
 def dump_cfg_temp(overwrite:bool=False) -> Union[str, Path]:
     ''' Download the config template according to latest configuration schema. '''
     path = get_cfg_path()
@@ -35,8 +32,14 @@ def dump_cfg_temp(overwrite:bool=False) -> Union[str, Path]:
     return path
 
 
+def toggle_backend(backend:str) -> None:
+    cfg_fn = get_cfg_path()
+    modify_cfg_with_new_backend(cfg_fn, backend)
+    return None
+
+
 def print_manual() -> None:
-    manual_path = __file__.replace('utils.py', 'manual.txt')
+    manual_path = __file__.replace('__init__.py', 'manual.txt')
     with open(manual_path, 'r') as f:
         manual = f.read()
     return print(manual)

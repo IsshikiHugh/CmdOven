@@ -37,6 +37,15 @@ def oven() -> None:
     elif action == 'home':
         from oven.utils import get_home_path
         return print(get_home_path())
+    elif action == 'toggle-backend':
+        from oven.utils import toggle_backend
+        if len(args) == 0:
+            print('😵‍💫 Please enter the backend you want to switch to!')
+            return None
+        elif len(args) > 1:
+            print(f'😵‍💫 Unexpected argument {args[1:]}!')
+            return None
+        return toggle_backend(args[0])
     else:
         from oven.utils import error_redirect_to_manual
         return error_redirect_to_manual(action)
