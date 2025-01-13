@@ -114,13 +114,11 @@ def train() -> None:
 
 The tool is still iterating. Here are some features that I plan to implement in the future:
 
-- [x] Automatic configuration file initialization.
 - More backends supports:
-  - [ ] telegram
-  - [ ] slack
-  - [ ] [bark](https://github.com/Finb/Bark)
-  - [x] feishu
-  - [ ] email
+  - telegram
+  - slack
+  - [bark](https://github.com/Finb/Bark)
+  - email
 - More friendly API.
 
 ## Contribution

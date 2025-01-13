@@ -1,9 +1,12 @@
 from setuptools import setup, find_packages
 
 
+with open('oven/version.py') as f:
+    exec(f.read())
+
 setup(
     name ='exp-oven',
-    version = '0.4.1',
+    version = __version__,
     author = 'Yan XIA',
     author_email = '',
     packages = find_packages(),
