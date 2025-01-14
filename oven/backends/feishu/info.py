@@ -63,7 +63,7 @@ class FeishuExpInfo(ExpInfoBase):
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
-            self.exp_info = lines2reply(self.exp_info_backup)
+            self.exp_info = lines2reply(self.exp_info_backup.split('\n'))
 
             cost_info = f'⏱️ **Time Cost**: {str(self.current_timestamp - self.start_timestamp)}s.'
             if self.current_signal == Signal.P:
