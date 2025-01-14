@@ -14,7 +14,7 @@ class FeishuBackend(NotifierBackendBase):
 
     def __init__(self, cfg:Dict):
         # Validate the configuration.
-        assert 'hook' in cfg and 'access_token=<?>' not in cfg['hook'], \
+        assert 'hook' in cfg and '<?>' not in cfg['hook'], \
             'Please ensure the validity of "feishu.hook" field in the configuration file!'
         assert 'signature' in cfg and '<?>' not in cfg['signature'], \
             'Please ensure the validity of "feishu.signature" field in the configuration file!'
