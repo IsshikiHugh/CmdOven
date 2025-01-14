@@ -12,21 +12,21 @@ from email.mime.multipart import MIMEMultipart
 from .info import EmailExpInfo, EmailLogInfo
 
 class EmailBackend(NotifierBackendBase):
-    
+
     def __init__(self, cfg:Dict):
         # Validate the configuration.
-        assert 'smtp_server' in cfg, \
-            'Please ensure the validity of "email.smtp_server" field in the configuration file!'
-        assert 'smtp_port' in cfg and isinstance(cfg['smtp_port'],int), \
-            'Please ensure the validity of "email.smtp_port" field in the configuration file!'
-        assert 'sender_email' in cfg, \
-            'Please ensure the validity of "email.sender_email" field in the configuration file!'
-        assert 'sender_pwd' in cfg, \
-            'Please ensure the validity of "email.sender_pwd" field in the configuration file!'
-        assert 'receiver_email' in cfg, \
-            'Please ensure the validity of "email.receiver_email" field in the configuration file!'
+        assert 'smtp_server' in cfg and '<?>' not in cfg['smtp_server'], \
+            'Please ensure the validity of \"email.smtp_server\" field in the configuration file!'
+        assert 'smtp_port' in cfg and isinstance(cfg['smtp_port'], int), \
+            'Please ensure the validity of \"email.smtp_port\" field in the configuration file!'
+        assert 'sender_email' in cfg and '<?>' not in cfg['smtp_server'], \
+            'Please ensure the validity of \"email.sender_email\" field in the configuration file!'
+        assert 'sender_pwd' in cfg and '<?>' not in cfg['smtp_server'], \
+            'Please ensure the validity of \"email.sender_pwd\" field in the configuration file!'
+        assert 'receiver_email' in cfg and '<?>' not in cfg['smtp_server'], \
+            'Please ensure the validity of \"email.receiver_email\" field in the configuration file!'
 
-        
+
         # Setup.
         self.cfg = cfg
         self.smtp_server = cfg['smtp_server']
@@ -34,7 +34,7 @@ class EmailBackend(NotifierBackendBase):
         self.sender_email = cfg['sender_email']
         self.sender_pwd = cfg['sender_pwd']
         self.receiver_email = cfg['receiver_email']
-    
+
 
     def get_meta(self) -> Dict:
         ''' Generate meta information for information object. '''
@@ -45,7 +45,7 @@ class EmailBackend(NotifierBackendBase):
             'sender_pwd': self.cfg.get('sender_pwd', None),
             'receiver_email': self.cfg.get('receiver_email', None),
         }
-        
+
     def notify(self, info:EmailExpInfo):
         '''
         Sending email to notify
@@ -55,10 +55,9 @@ class EmailBackend(NotifierBackendBase):
         timestamp = int(datetime.now().timestamp())
 
         formatted_data = {
-                "timestamp": timestamp,
-                # "sign": sign,
-                "msg_type": "mail",
-                "card": info.format_information(),
+                'timestamp': timestamp,
+                'msg_type': 'mail',
+                'card': info.format_information(),
         }
         # mail config
         smtp_server = self.cfg['smtp_server']

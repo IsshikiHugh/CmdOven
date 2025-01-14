@@ -17,20 +17,20 @@ class EmailExpInfo(ExpInfoBase):
 
     def format_information(self) -> dict:
         # Never send empty paragraph, it would be ugly.
-        
-        element = self.exp_info 
-        if len(self.aux_info) > 0: element += self.aux_info + "\n"
+
+        element = self.exp_info
+        if len(self.aux_info) > 0: element += '\n' + self.aux_info + '\n'
         if len(self.current_description) > 0: element += self.current_description
         information = {
-            "subject": f'{self.readable_time} @ {self.host}',
-            "content": element,
+            'subject': f'{self.readable_time} @ {self.host}',
+            'content': element,
         }
         return information
 
     # =================== #
     # Customized methods. #
     # =================== #
-    
+
     def custom_signal_handler(self) -> None:
         # Initialization.
         if self.current_signal == Signal.I:
@@ -47,11 +47,14 @@ class EmailExpInfo(ExpInfoBase):
         # Format the information for later use.
         self.current_description = self.current_description
         if self.current_signal == Signal.S:
-            self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(self.current_description.split('\n'))
+            if self.current_description == '':
+                self.exp_info = f'🔥 `{self.cmd}`'
+            else:
+                self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(self.current_description.split('\n'))
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
-            # self.exp_info = lines2reply(self.exp_info_backup)
+            self.exp_info = lines2reply(self.exp_info_backup.split('\n'))
 
             cost_info = f'⏱️ **Time Cost**: {str(self.current_timestamp - self.start_timestamp)}s.'
             if self.current_signal == Signal.P:
@@ -63,7 +66,7 @@ class EmailExpInfo(ExpInfoBase):
             else:
                 assert False, f'Unknown signal: {self.current_signal}'
 
-            self.aux_info = "\n".join([cost_info, status_info])
+            self.aux_info = '\n'.join([cost_info, status_info])
 
     # ================ #
     # Utils functions. #
@@ -94,8 +97,8 @@ class EmailLogInfo(LogInfoBase, EmailExpInfo):
 
     def format_information(self) -> dict:
         information = {
-            "subject": f'{self.readable_time} @ {self.host}',
-            "content": self.current_description,
+            'subject': f'{self.readable_time} @ {self.host}',
+            'content': self.current_description,
         }
         return information
 
