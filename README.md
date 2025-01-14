@@ -110,22 +110,12 @@ def train() -> None:
         train_after_epoch()
 ```
 
-## TODOs
-
-The tool is still iterating. Here are some features that I plan to implement in the future:
-
-- More backends supports:
-  - telegram
-  - slack
-  - [bark](https://github.com/Finb/Bark)
-  - email
-- More friendly API.
 
 ## Contribution
 
 Thank you for contributing!
 
-I leave some design details at [docs/docs.md](./docs/docs.md). The implementation of [DingTalk backend](./oven/backends/dingtalk/__init__.py) should be a good example.
+**Before contributing, you are suggested to check this [issue#14](https://github.com/IsshikiHugh/ExpOven/issues/14) first**. In addition, I leave some design details at [docs/docs.md](./docs/docs.md). The implementation of [DingTalk backend](./oven/backends/dingtalk/__init__.py) should be a good example.
 
 According to [this](https://stackoverflow.com/questions/35278957/can-i-modify-someone-elses-pull-request-and-push-it-back-in-its-branch/49854013#49854013), I *recommend* you to check "Allow edits from maintainers." when you open the pull request.
 
