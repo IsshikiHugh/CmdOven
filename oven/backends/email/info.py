@@ -23,7 +23,7 @@ class EmailExpInfo(ExpInfoBase):
         if len(self.current_description) > 0: element += self.current_description
         information = {
             "subject": f'{self.readable_time} @ {self.host}',
-            "body": element,
+            "content": element,
         }
         return information
 
@@ -95,7 +95,7 @@ class EmailLogInfo(LogInfoBase, EmailExpInfo):
     def format_information(self) -> dict:
         information = {
             "subject": f'{self.readable_time} @ {self.host}',
-            "body": self.current_description,
+            "content": self.current_description,
         }
         return information
 

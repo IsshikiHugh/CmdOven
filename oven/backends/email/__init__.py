@@ -68,16 +68,16 @@ class EmailBackend(NotifierBackendBase):
         receiver_email = self.cfg['receiver_email']
 
         subject = formatted_data['card']['subject']
-        body = formatted_data['card']['body']
+        content = formatted_data['card']['content']
 
-        # Initilaize the message
+        # Construct message
         msg = MIMEMultipart()
         msg['From'] = sender_email
         msg['To'] = receiver_email
         msg['Subject'] = subject
 
-        # Attach body
-        msg.attach(MIMEText(body, 'plain'))
+        # Attach content
+        msg.attach(MIMEText(content, 'plain'))
         has_err = False
         try:
             # Connect to the SMTP server.
