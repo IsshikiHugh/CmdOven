@@ -17,30 +17,20 @@ class EmailExpInfo(ExpInfoBase):
 
     def format_information(self) -> dict:
         # Never send empty paragraph, it would be ugly.
-        element = []
-        parts = [self.exp_info, self.aux_info, self.current_description]
-        for part in parts:
-            if len(part) > 0:
-                element.append({
-                    "tag": "markdown",
-                    "content": part,
-                })
-
+        
+        element = self.exp_info 
+        if len(self.aux_info) > 0: element += self.aux_info + "\n"
+        if len(self.current_description) > 0: element += self.current_description
         information = {
-            "schema": "2.0",
-            "header": {
-                "title": {
-                    "content": f'{self.readable_time} @ {self.host}',
-                    "tag": "plain_text",
-                }
-            },
-            "body": {
-                "elements": element,
-            }
+            "subject": f'{self.readable_time} @ {self.host}',
+            "body": element,
         }
         return information
 
-
+    # =================== #
+    # Customized methods. #
+    # =================== #
+    
     def custom_signal_handler(self) -> None:
         # Initialization.
         if self.current_signal == Signal.I:
@@ -61,7 +51,7 @@ class EmailExpInfo(ExpInfoBase):
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
-            self.exp_info = lines2reply(self.exp_info_backup)
+            # self.exp_info = lines2reply(self.exp_info_backup)
 
             cost_info = f'⏱️ **Time Cost**: {str(self.current_timestamp - self.start_timestamp)}s.'
             if self.current_signal == Signal.P:
@@ -74,6 +64,10 @@ class EmailExpInfo(ExpInfoBase):
                 assert False, f'Unknown signal: {self.current_signal}'
 
             self.aux_info = "\n".join([cost_info, status_info])
+
+    # ================ #
+    # Utils functions. #
+    # ================ #
 
     def _init_meta(self) -> Dict:
         # The host name of the machine where the experiment is running.
@@ -92,14 +86,6 @@ class EmailExpInfo(ExpInfoBase):
         }
         return validated_meta
 
-    # =================== #
-    # Customized methods. #
-    # =================== #
-
-    # ================ #
-    # Utils functions. #
-    # ================ #
-
 class EmailLogInfo(LogInfoBase, EmailExpInfo):
 
     # ================ #
@@ -107,11 +93,11 @@ class EmailLogInfo(LogInfoBase, EmailExpInfo):
     # ================ #
 
     def format_information(self) -> dict:
-        information1 = {
+        information = {
             "subject": f'{self.readable_time} @ {self.host}',
             "body": self.current_description,
         }
-        return information1
+        return information
 
     def custom_signal_handler(self) -> None:
         # Initialization.

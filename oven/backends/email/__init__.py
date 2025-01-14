@@ -15,15 +15,15 @@ class EmailBackend(NotifierBackendBase):
     
     def __init__(self, cfg:Dict):
         # Validate the configuration.
-        assert 'smtp_server' in cfg and 'smtp_server=<?>' not in cfg['smtp_server'], \
+        assert 'smtp_server' in cfg, \
             'Please ensure the validity of "email.smtp_server" field in the configuration file!'
         assert 'smtp_port' in cfg and isinstance(cfg['smtp_port'],int), \
             'Please ensure the validity of "email.smtp_port" field in the configuration file!'
-        assert 'sender_email' in cfg and 'sender_email=<?>' not in cfg['sender_email'], \
+        assert 'sender_email' in cfg, \
             'Please ensure the validity of "email.sender_email" field in the configuration file!'
-        assert 'sender_pwd' in cfg and 'sender_pwd=<?>' not in cfg['sender_pwd'], \
+        assert 'sender_pwd' in cfg, \
             'Please ensure the validity of "email.sender_pwd" field in the configuration file!'
-        assert 'receiver_email' in cfg and 'receiver_email=<?>' not in cfg['receiver_email'], \
+        assert 'receiver_email' in cfg, \
             'Please ensure the validity of "email.receiver_email" field in the configuration file!'
 
         
@@ -78,22 +78,19 @@ class EmailBackend(NotifierBackendBase):
 
         # Attach body
         msg.attach(MIMEText(body, 'plain'))
-
+        has_err = False
         try:
             # Connect to the SMTP server.
             server = smtplib.SMTP(smtp_server, smtp_port)
             server.starttls()  # TLS encryption
             server.login(sender_email, sender_password)  # login
-
             # Sending
             server.sendmail(sender_email, receiver_email, msg.as_string())
-            print('Sent Successful !')
-
-        except Exception as e:
-            print(f'Sent Failure !: {e}')
-
-        finally:
             server.quit()
+        except Exception as e:
+            has_err = True
+            # meta = ...
+            # after RespStatus is implemented
 
         # 3. Return response dict.
         resp_status = RespStatus(has_err=True, meta={})  # TODO: fill in the response status, since its not implemented, 'has_err' is always True.
