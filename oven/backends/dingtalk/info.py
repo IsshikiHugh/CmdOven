@@ -2,6 +2,7 @@ import time
 from typing import Union, Dict
 
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
+from oven.utils.time import timestamp_to_readable, seconds_to_adaptive_time_cost
 
 def lines2reply(lines):
     ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
@@ -45,7 +46,7 @@ class DingTalkExpInfo(ExpInfoBase):
             return
 
         # Format the time anyway.
-        self.readable_time = time.strftime('%a %d %b %Y %I:%M:%S %p %Z', time.localtime(self.current_timestamp))
+        self.readable_time = timestamp_to_readable(self.current_timestamp)
 
         # Format the information for later use.
         self.current_description = plain2md(self.current_description)
@@ -56,7 +57,10 @@ class DingTalkExpInfo(ExpInfoBase):
         else:
             self.exp_info = lines2reply(self.exp_info_backup.split('\n'))
 
-            cost_info = f'⏱️ **Time Cost**: {str(self.current_timestamp - self.start_timestamp)}s.'
+            import ipdb
+            ipdb.set_trace()
+
+            cost_info = f'⏱️ **Time Cost**: {seconds_to_adaptive_time_cost(self.current_timestamp - self.start_timestamp)}.'
             if self.current_signal == Signal.P:
                 status_info = f'🏃 **Running!**'
             elif self.current_signal == Signal.E:
@@ -128,4 +132,4 @@ class DingTalkLogInfo(LogInfoBase, DingTalkExpInfo):
             return
 
         # Format the time anyway.
-        self.readable_time = time.strftime('%a %d %b %Y %I:%M:%S %p %Z', time.localtime(self.current_timestamp))
+        self.readable_time = timestamp_to_readable(self.current_timestamp)

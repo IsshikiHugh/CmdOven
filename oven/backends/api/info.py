@@ -2,6 +2,7 @@ import time
 import socket
 
 from typing import Optional, Dict
+from oven.utils.time import get_current_timestamp
 
 
 class Signal:
@@ -65,7 +66,7 @@ class ExpInfoBase:
         # Start.
         self.current_signal = Signal.S
         self.current_description = description
-        self.current_timestamp = int(time.time())
+        self.current_timestamp = get_current_timestamp()
         self.start_timestamp = self.current_timestamp
         self._safe_signal_handler()
 
@@ -74,7 +75,7 @@ class ExpInfoBase:
         try:
             assert Signal.is_valid(self.current_signal), 'Invalid signal.'
             # Get trigger time.
-            self.current_timestamp = int(time.time())
+            self.current_timestamp = get_current_timestamp()
         except AssertionError as e:
             # Detect signal validity.
             self.current_signal = Signal.E
