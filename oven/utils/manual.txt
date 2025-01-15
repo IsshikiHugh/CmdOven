@@ -13,6 +13,7 @@ Shortcuts:
 Full:
   oven [actions] <actions-args>
     Actions:
+      version                    Show current version and check the latest version.
       help                       Show the manual.
       ding <message>             The same as the shortcut "ding".
                                  eg: oven ding "Hello World!"
@@ -20,5 +21,5 @@ Full:
                                  eg: oven bake python train.py --exp_name='debug'
       init-cfg                   Create and initialize the configuration file.
       reset-cfg                  Overwrite and reset the configuration file.
-      home                       Display the detected home directory.
       toggle-backend <backend>   Toggle the backend of the notifier.
+      home                       Display the detected home directory.
