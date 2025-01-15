@@ -18,4 +18,11 @@ email:
   sender_pwd: sender_pwd=<?>
   receiver_email: receiver_email=<?>  # sample@sample.com
 
-version: 1.3.0  # version of cfg template
+bark: 
+  # host: <?>  # optional
+  device_token: device_token=<?>
+  level: active # active(default) | timeSensitive | passive | critical 
+  group: group=<?> 
+  url : url=<?> 
+
+version: 1.4.0  # version of cfg template
