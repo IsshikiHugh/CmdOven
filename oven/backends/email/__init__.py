@@ -47,9 +47,7 @@ class EmailBackend(NotifierBackendBase):
         }
 
     def notify(self, info:EmailExpInfo):
-        '''
-        Sending email to notify
-        '''
+        ''' Sending email to notify. '''
 
         # 1. Prepare data dict.
         timestamp = int(datetime.now().timestamp())

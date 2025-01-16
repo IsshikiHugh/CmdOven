@@ -57,9 +57,6 @@ class DingTalkExpInfo(ExpInfoBase):
         else:
             self.exp_info = lines2reply(self.exp_info_backup.split('\n'))
 
-            import ipdb
-            ipdb.set_trace()
-
             cost_info = f'⏱️ **Time Cost**: {seconds_to_adaptive_time_cost(self.current_timestamp - self.start_timestamp)}.'
             if self.current_signal == Signal.P:
                 status_info = f'🏃 **Running!**'
