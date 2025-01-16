@@ -1,6 +1,6 @@
 import json
 import requests
-from typing import Union, Dict
+from typing import Union, Dict, Tuple
 
 from oven.backends.api import NotifierBackendBase, RespStatus
 
@@ -38,14 +38,17 @@ class DingTalkBackend(NotifierBackendBase):
         }
 
         # 2. Post request and get response.
+        has_err, err_msg = False, ''
         try:
             resp = requests.post(self.url, json=data)
             resp_dict = json.loads(resp.text)
-        except:
-            resp_dict = {}
+            has_err, err_msg = self._parse_resp(resp_dict)
+        except Exception as e:
+            has_err = True
+            err_msg = 'Cannot send message to DingTalk: {e}'
 
         # 3. Return response dict.
-        resp_status = RespStatus(has_err=True, meta={})  # TODO: fill in the response status, since its not implemented, 'has_err' is always True.
+        resp_status = RespStatus(has_err=has_err, err_msg=err_msg)
         return resp_status
 
 
@@ -56,3 +59,16 @@ class DingTalkBackend(NotifierBackendBase):
             'sec_key': self.cfg['secure_key'],
             'backend': 'DingTalkBackend'
         }
+
+
+    # ================ #
+    # Utils functions. #
+    # ================ #
+
+    def _parse_resp(self, resp_dict) -> Tuple[bool, str]:
+        if resp_dict['errcode'] == 0:
+            return False, ''
+        else:
+            code = resp_dict['errcode']
+            msg = resp_dict['errmsg']
+            return True, f'[{code}] {msg}'

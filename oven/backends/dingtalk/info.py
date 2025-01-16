@@ -70,7 +70,6 @@ class DingTalkExpInfo(ExpInfoBase):
             self.aux_info = cost_info + line_split + status_info
 
 
-
     # =================== #
     # Customized methods. #
     # =================== #

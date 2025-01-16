@@ -90,7 +90,8 @@ class ExpInfoBase:
         # Trigger notifier backend.
         if Signal.is_noisy(self.current_signal):
             resp = self.backend.notify(self)
-            # TODO: Deal with the response.
+            if resp.has_err:
+                raise ConnectionError(f'Notifier backend error detected: {resp.err_msg}')
 
 
     def update_signal(self, signal:int, description:Optional[str]='') -> None:

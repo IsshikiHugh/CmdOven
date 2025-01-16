@@ -1,6 +1,6 @@
 import json
 import requests
-from typing import Union, Dict
+from typing import Union, Dict, Tuple
 import base64
 import hashlib
 import hmac
@@ -51,14 +51,17 @@ class FeishuBackend(NotifierBackendBase):
                 "card": info.format_information(),
             }
         # 2. Post request and get response.
+        has_err, err_msg = False, ''
         try:
             resp = requests.post(self.url, json=formatted_data)
             resp_dict = json.loads(resp.text)
-        except:
-            resp_dict = {}
+            has_err, err_msg = self._parse_resp(resp_dict)
+        except Exception as e:
+            has_err = True
+            err_msg = f'Cannot send message to Feishu: {e}'
 
         # 3. Return response dict.
-        resp_status = RespStatus(has_err=True, meta={})  # TODO: fill in the response status, since its not implemented, 'has_err' is always True.
+        resp_status = RespStatus(has_err=has_err, err_msg=err_msg)
         return resp_status
 
 
@@ -69,3 +72,20 @@ class FeishuBackend(NotifierBackendBase):
             'signature': self.cfg.get('signature', None),
             'backend': 'FeishuBackend'
         }
+
+
+    # ================ #
+    # Utils functions. #
+    # ================ #
+
+    def _parse_resp(self, resp_dict) -> Tuple[bool, str]:
+        ''' 
+        Reference: https://open.feishu.cn/community/articles/7298688341381546012 
+        Addition: according to test, if the message is sent successfully, the response will have `code=0`.
+        '''
+        if 'code' not in resp_dict or resp_dict['code'] == 0:
+            return False, ''
+        else:
+            code = resp_dict['code']
+            msg = resp_dict['msg']
+            return True, f'[{code}] {msg}'

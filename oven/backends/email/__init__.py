@@ -75,7 +75,7 @@ class EmailBackend(NotifierBackendBase):
 
         # Attach content
         msg.attach(MIMEText(content, 'plain'))
-        has_err = False
+        has_err, err_msg = False, ''
         try:
             # Connect to the SMTP server.
             server = smtplib.SMTP(smtp_server, smtp_port)
@@ -86,9 +86,8 @@ class EmailBackend(NotifierBackendBase):
             server.quit()
         except Exception as e:
             has_err = True
-            # meta = ...
-            # after RespStatus is implemented
+            err_msg = f'Cannot send email: {e}'
 
         # 3. Return response dict.
-        resp_status = RespStatus(has_err=True, meta={})  # TODO: fill in the response status, since its not implemented, 'has_err' is always True.
+        resp_status = RespStatus(has_err=has_err, err_msg=err_msg)
         return resp_status
