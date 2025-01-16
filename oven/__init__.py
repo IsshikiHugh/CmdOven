@@ -4,7 +4,9 @@ from oven.oven import Oven, build_oven
 from oven.version import __version__
 
 # Global oven.
-_lazy_oven_obj:Optional[Oven] = None
+_lazy_oven_obj: Optional[Oven] = None
+
+
 def get_lazy_oven() -> Optional[Oven]:
     global _lazy_oven_obj
     if _lazy_oven_obj is None:
@@ -16,8 +18,9 @@ def get_lazy_oven() -> Optional[Oven]:
 # Utils functions for in-package use. #
 # =================================== #
 
+
 def monitor(func) -> Callable:
-    '''
+    """
     Notifier decorator for a function.
 
     Usage:
@@ -32,12 +35,12 @@ def monitor(func) -> Callable:
     def foo() -> None:
         ...
     ```
-    '''
+    """
     return get_lazy_oven().ding_func(func)
 
 
-def notify(msg:str) -> None:
-    '''
+def notify(msg: str) -> None:
+    """
     Notify a single message logging.
 
     Usage:
@@ -48,8 +51,9 @@ def notify(msg:str) -> None:
     ```
     @oven.ding('Hello World!')
     ```
-    '''
+    """
     return get_lazy_oven().ding_log(msg)
+
 
 # 🍟 Interesting alias just for fun, these alias are aligned with CLI.
 bake = monitor  # @oven.bake = @oven.monitor

@@ -1,31 +1,32 @@
-import json
-import requests
-from typing import Union, Dict
-import base64
-import hashlib
-import hmac
+from typing import Dict
 from datetime import datetime
-from oven.backends.api import NotifierBackendBase, RespStatus
+
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+from oven.backends.api import NotifierBackendBase, RespStatus
 from .info import EmailExpInfo, EmailLogInfo
 
+
 class EmailBackend(NotifierBackendBase):
-
-    def __init__(self, cfg:Dict):
+    def __init__(self, cfg: Dict):
         # Validate the configuration.
-        assert 'smtp_server' in cfg and '<?>' not in cfg['smtp_server'], \
-            'Please ensure the validity of \"email.smtp_server\" field in the configuration file!'
-        assert 'smtp_port' in cfg and isinstance(cfg['smtp_port'], int), \
-            'Please ensure the validity of \"email.smtp_port\" field in the configuration file!'
-        assert 'sender_email' in cfg and '<?>' not in cfg['smtp_server'], \
-            'Please ensure the validity of \"email.sender_email\" field in the configuration file!'
-        assert 'sender_pwd' in cfg and '<?>' not in cfg['smtp_server'], \
-            'Please ensure the validity of \"email.sender_pwd\" field in the configuration file!'
-        assert 'receiver_email' in cfg and '<?>' not in cfg['smtp_server'], \
-            'Please ensure the validity of \"email.receiver_email\" field in the configuration file!'
-
+        assert (
+            'smtp_server' in cfg and '<?>' not in cfg['smtp_server']
+        ), 'Please ensure the validity of "email.smtp_server" field in the configuration file!'
+        assert 'smtp_port' in cfg and isinstance(
+            cfg['smtp_port'], int
+        ), 'Please ensure the validity of "email.smtp_port" field in the configuration file!'
+        assert (
+            'sender_email' in cfg and '<?>' not in cfg['smtp_server']
+        ), 'Please ensure the validity of "email.sender_email" field in the configuration file!'
+        assert (
+            'sender_pwd' in cfg and '<?>' not in cfg['smtp_server']
+        ), 'Please ensure the validity of "email.sender_pwd" field in the configuration file!'
+        assert (
+            'receiver_email' in cfg and '<?>' not in cfg['smtp_server']
+        ), 'Please ensure the validity of "email.receiver_email" field in the configuration file!'
 
         # Setup.
         self.cfg = cfg
@@ -35,9 +36,8 @@ class EmailBackend(NotifierBackendBase):
         self.sender_pwd = cfg['sender_pwd']
         self.receiver_email = cfg['receiver_email']
 
-
     def get_meta(self) -> Dict:
-        ''' Generate meta information for information object. '''
+        """Generate meta information for information object."""
         return {
             'smtp_server': self.cfg.get('smtp_server', None),
             'smtp_port': self.cfg.get('smtp_port', None),
@@ -46,16 +46,16 @@ class EmailBackend(NotifierBackendBase):
             'receiver_email': self.cfg.get('receiver_email', None),
         }
 
-    def notify(self, info:EmailExpInfo):
-        ''' Sending email to notify. '''
+    def notify(self, info: EmailExpInfo):
+        """Sending email to notify."""
 
         # 1. Prepare data dict.
         timestamp = int(datetime.now().timestamp())
 
         formatted_data = {
-                'timestamp': timestamp,
-                'msg_type': 'mail',
-                'card': info.format_information(),
+            'timestamp': timestamp,
+            'msg_type': 'mail',
+            'card': info.format_information(),
         }
         # mail config
         smtp_server = self.cfg['smtp_server']

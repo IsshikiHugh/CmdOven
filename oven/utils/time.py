@@ -1,18 +1,21 @@
 import time
-import datetime
 
 
 def get_current_timestamp() -> int:
     return int(time.time())
 
 
-def timestamp_to_readable(timestamp:int) -> str:
-    readable_time = time.strftime('%a %d %b %Y %I:%M:%S %p %Z', time.localtime(timestamp))
+def timestamp_to_readable(timestamp: int) -> str:
+    readable_time = time.strftime(
+        '%a %d %b %Y %I:%M:%S %p %Z', time.localtime(timestamp)
+    )
     return readable_time
 
 
 s_per_m, m_per_h, h_per_d = 60, 60, 24
-def seconds_to_adaptive_time_cost(seconds:int) -> str:
+
+
+def seconds_to_adaptive_time_cost(seconds: int) -> str:
     # Calculate the time cost in each units.
     minutes = seconds // s_per_m
     hours = minutes // m_per_h

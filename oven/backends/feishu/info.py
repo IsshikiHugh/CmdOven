@@ -1,12 +1,14 @@
-import time
-from typing import Union, Dict
+from typing import Dict
 
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
-from oven.utils.time import timestamp_to_readable, seconds_to_adaptive_time_cost
+from oven.utils.time import (
+    timestamp_to_readable,
+    seconds_to_adaptive_time_cost,
+)
 
 
 def lines2reply(lines):
-    ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
+    """It changes lines to string block and add quotation mark at the beginning of each line."""
     if lines == ['']:
         return ''
     return '> ' + '\n>\n> '.join(lines).strip()
@@ -24,25 +26,26 @@ class FeishuExpInfo(ExpInfoBase):
         parts = [self.exp_info, self.aux_info, self.current_description]
         for part in parts:
             if len(part) > 0:
-                element.append({
-                    "tag": "markdown",
-                    "content": part,
-                })
+                element.append(
+                    {
+                        'tag': 'markdown',
+                        'content': part,
+                    }
+                )
 
         information = {
-            "schema": "2.0",
-            "header": {
-                "title": {
-                    "content": f'{self.readable_time} @ {self.host}',
-                    "tag": "plain_text",
+            'schema': '2.0',
+            'header': {
+                'title': {
+                    'content': f'{self.readable_time} @ {self.host}',
+                    'tag': 'plain_text',
                 }
             },
-            "body": {
-                "elements": element,
-            }
+            'body': {
+                'elements': element,
+            },
         }
         return information
-
 
     def custom_signal_handler(self) -> None:
         # Initialization.
@@ -60,7 +63,9 @@ class FeishuExpInfo(ExpInfoBase):
         # Format the information for later use.
         self.current_description = self.current_description
         if self.current_signal == Signal.S:
-            self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(self.current_description.split('\n'))
+            self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(
+                self.current_description.split('\n')
+            )
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
@@ -68,17 +73,15 @@ class FeishuExpInfo(ExpInfoBase):
 
             cost_info = f'⏱️ **Time Cost**: {seconds_to_adaptive_time_cost(self.current_timestamp - self.start_timestamp)}.'
             if self.current_signal == Signal.P:
-                status_info = f'🏃 **Running!**'
+                status_info = '🏃 **Running!**'
             elif self.current_signal == Signal.E:
-                status_info = f'❌ **Error!**'
+                status_info = '❌ **Error!**'
             elif self.current_signal == Signal.T:
-                status_info = f'🔔 Done!'
+                status_info = '🔔 Done!'
             else:
                 assert False, f'Unknown signal: {self.current_signal}'
 
-            self.aux_info = "\n".join([cost_info, status_info])
-
-
+            self.aux_info = '\n'.join([cost_info, status_info])
 
     # =================== #
     # Customized methods. #
@@ -114,19 +117,21 @@ class FeishuLogInfo(LogInfoBase, FeishuExpInfo):
 
     def format_information(self) -> dict:
         information = {
-            "schema": "2.0",
-            "header": {
-                "title": {
-                    "content": f'{self.readable_time} @ {self.host}',
-                    "tag": "plain_text",
+            'schema': '2.0',
+            'header': {
+                'title': {
+                    'content': f'{self.readable_time} @ {self.host}',
+                    'tag': 'plain_text',
                 },
             },
-            "body": {
-                "elements": [{
-                    "tag": "markdown",
-                    "content": self.current_description,
-                }]
-            }
+            'body': {
+                'elements': [
+                    {
+                        'tag': 'markdown',
+                        'content': self.current_description,
+                    }
+                ]
+            },
         }
         return information
 

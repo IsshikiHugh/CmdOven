@@ -1,15 +1,18 @@
-import time
-from typing import Union, Dict
+from typing import Dict
 
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
-from oven.utils.time import timestamp_to_readable, seconds_to_adaptive_time_cost
+from oven.utils.time import (
+    timestamp_to_readable,
+    seconds_to_adaptive_time_cost,
+)
 
 
 def lines2reply(lines):
-    ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
+    """It changes lines to string block and add quotation mark at the beginning of each line."""
     if lines == ['']:
         return ''
     return '> ' + '\n>\n> '.join(lines).strip()
+
 
 class EmailExpInfo(ExpInfoBase):
 
@@ -21,8 +24,10 @@ class EmailExpInfo(ExpInfoBase):
         # Never send empty paragraph, it would be ugly.
 
         element = self.exp_info
-        if len(self.aux_info) > 0: element += '\n' + self.aux_info + '\n'
-        if len(self.current_description) > 0: element += self.current_description
+        if len(self.aux_info) > 0:
+            element += '\n' + self.aux_info + '\n'
+        if len(self.current_description) > 0:
+            element += self.current_description
         information = {
             'subject': f'{self.readable_time} @ {self.host}',
             'content': element,
@@ -52,7 +57,9 @@ class EmailExpInfo(ExpInfoBase):
             if self.current_description == '':
                 self.exp_info = f'🔥 `{self.cmd}`'
             else:
-                self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(self.current_description.split('\n'))
+                self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(
+                    self.current_description.split('\n')
+                )
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
@@ -60,11 +67,11 @@ class EmailExpInfo(ExpInfoBase):
 
             cost_info = f'⏱️ **Time Cost**: {seconds_to_adaptive_time_cost(self.current_timestamp - self.start_timestamp)}.'
             if self.current_signal == Signal.P:
-                status_info = f'🏃 **Running!**'
+                status_info = '🏃 **Running!**'
             elif self.current_signal == Signal.E:
-                status_info = f'❌ **Error!**'
+                status_info = '❌ **Error!**'
             elif self.current_signal == Signal.T:
-                status_info = f'🔔 Done!'
+                status_info = '🔔 Done!'
             else:
                 assert False, f'Unknown signal: {self.current_signal}'
 
@@ -90,6 +97,7 @@ class EmailExpInfo(ExpInfoBase):
             'signature': None,
         }
         return validated_meta
+
 
 class EmailLogInfo(LogInfoBase, EmailExpInfo):
 

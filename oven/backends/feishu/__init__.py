@@ -1,23 +1,26 @@
 import json
-import requests
-from typing import Union, Dict, Tuple
+from typing import Dict, Tuple
 import base64
 import hashlib
 import hmac
 from datetime import datetime
-from oven.backends.api import NotifierBackendBase, RespStatus
 
+import requests
+
+from oven.backends.api import NotifierBackendBase, RespStatus
+from oven.consts import REQ_TIMEOUT
 from .info import FeishuExpInfo, FeishuLogInfo
 
 
 class FeishuBackend(NotifierBackendBase):
-
-    def __init__(self, cfg:Dict):
+    def __init__(self, cfg: Dict):
         # Validate the configuration.
-        assert 'hook' in cfg and '<?>' not in cfg['hook'], \
-            'Please ensure the validity of "feishu.hook" field in the configuration file!'
-        assert 'signature' in cfg and '<?>' not in cfg['signature'], \
-            'Please ensure the validity of "feishu.signature" field in the configuration file!'
+        assert (
+            'hook' in cfg and '<?>' not in cfg['hook']
+        ), 'Please ensure the validity of "feishu.hook" field in the configuration file!'
+        assert (
+            'signature' in cfg and '<?>' not in cfg['signature']
+        ), 'Please ensure the validity of "feishu.signature" field in the configuration file!'
 
         # Setup.
         self.cfg = cfg
@@ -26,34 +29,35 @@ class FeishuBackend(NotifierBackendBase):
 
     def _gen_sign(self, secret):
         timestamp = int(datetime.now().timestamp())
-        string_to_sign = '{}\n{}'.format(timestamp, secret)
+        string_to_sign = f'{timestamp}\n{secret}'
         hmac_code = hmac.new(
-            string_to_sign.encode("utf-8"), digestmod=hashlib.sha256
+            string_to_sign.encode('utf-8'), digestmod=hashlib.sha256
         ).digest()
         sign = base64.b64encode(hmac_code).decode('utf-8')
         return sign
 
-
-    def notify(self, info:FeishuExpInfo):
-        '''
+    def notify(self, info: FeishuExpInfo):
+        """
         Ask the bot to send raw string message.
         Check docs: https://www.feishu.cn/hc/zh-CN/category/7177281426289704962-%E9%A3%9E%E4%B9%A6%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%8A%A9%E6%89%8B
-        '''
+        """
 
         # 1. Prepare data dict.
         sign = self._gen_sign(self.secret)
         timestamp = int(datetime.now().timestamp())
 
         formatted_data = {
-                "timestamp": timestamp,
-                "sign": sign,
-                "msg_type": "interactive",
-                "card": info.format_information(),
-            }
+            'timestamp': timestamp,
+            'sign': sign,
+            'msg_type': 'interactive',
+            'card': info.format_information(),
+        }
         # 2. Post request and get response.
         has_err, err_msg = False, ''
         try:
-            resp = requests.post(self.url, json=formatted_data)
+            resp = requests.post(
+                self.url, json=formatted_data, timeout=REQ_TIMEOUT
+            )
             resp_dict = json.loads(resp.text)
             has_err, err_msg = self._parse_resp(resp_dict)
         except Exception as e:
@@ -64,28 +68,26 @@ class FeishuBackend(NotifierBackendBase):
         resp_status = RespStatus(has_err=has_err, err_msg=err_msg)
         return resp_status
 
-
     def get_meta(self) -> Dict:
-        ''' Generate meta information for information object. '''
+        """Generate meta information for information object."""
         return {
             'host': self.cfg.get('host', None),
             'signature': self.cfg.get('signature', None),
-            'backend': 'FeishuBackend'
+            'backend': 'FeishuBackend',
         }
-
 
     # ================ #
     # Utils functions. #
     # ================ #
 
     def _parse_resp(self, resp_dict) -> Tuple[bool, str]:
-        ''' 
-        Reference: https://open.feishu.cn/community/articles/7298688341381546012 
+        """
+        Reference: https://open.feishu.cn/community/articles/7298688341381546012
         Addition: according to test, if the message is sent successfully, the response will have `code=0`.
-        '''
-        if 'code' not in resp_dict or resp_dict['code'] == 0:
-            return False, ''
-        else:
+        """
+        has_err, err_msg = False, ''
+        if 'code' in resp_dict and resp_dict['code'] != 0:
             code = resp_dict['code']
             msg = resp_dict['msg']
-            return True, f'[{code}] {msg}'
+            has_err, err_msg = True, f'[{code}] {msg}'
+        return has_err, err_msg
