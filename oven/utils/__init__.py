@@ -77,5 +77,5 @@ def print_manual() -> None:
 
 
 def error_redirect_to_manual(action) -> None:
-    print(f'😢 Action`{action}` is invalid!')
+    print(f'😢 Action `{action}` is invalid!')
     return print_manual()
