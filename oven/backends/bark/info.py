@@ -5,7 +5,7 @@ from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
 
 
 def lines2reply(lines):
-    ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
+    """It changes lines to string block and add quotation mark at the beginning of each line."""
     if lines == ['']:
         return ''
     return '> ' + '\n>\n> '.join(lines).strip()
@@ -20,12 +20,11 @@ class BarkExpInfo(ExpInfoBase):
     def format_information(self) -> dict:
         # Never send empty paragraph, it would be ugly.
         information = {
-            "title": f'{self.readable_time}@{self.host}',
-            "subtitle": self.exp_info,
-            "content": self.aux_info + self.current_description,
+            'title': f'{self.readable_time} @ {self.host}',
+            'subtitle': self.exp_info,
+            'content': self.aux_info + self.current_description,
         }
         return information
-
 
     def custom_signal_handler(self) -> None:
         # Initialization.
@@ -34,11 +33,14 @@ class BarkExpInfo(ExpInfoBase):
             # Update the meta information to member variables.
             self.host = self.exp_meta_info['host']
             self.cmd = self.exp_meta_info['cmd']
-            self.signature = self.exp_meta_info['signature']
+            self.device_token = self.exp_meta_info['device_token']
             return
 
         # Format the time anyway.
-        self.readable_time = time.strftime('%a %d %b %Y %I:%M:%S %p %Z', time.localtime(self.current_timestamp))
+        self.readable_time = time.strftime(
+            '%a %d %b %Y %I:%M:%S %p %Z',
+            time.localtime(self.current_timestamp),
+        )
 
         # Format the information for later use.
         self.current_description = self.current_description
@@ -46,7 +48,9 @@ class BarkExpInfo(ExpInfoBase):
             if self.current_description == '':
                 self.exp_info = f'🔥 `{self.cmd}`'
             else:
-                self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(self.current_description.split('\n'))
+                self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(
+                    self.current_description.split('\n')
+                )
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
@@ -57,14 +61,13 @@ class BarkExpInfo(ExpInfoBase):
                 status_info = f'🏃 **Running!**'
             elif self.current_signal == Signal.E:
                 status_info = f'❌ **Error!**'
+                self.current_description = '\n' + self.current_description
             elif self.current_signal == Signal.T:
                 status_info = f'🔔 Done!'
             else:
                 assert False, f'Unknown signal: {self.current_signal}'
 
-            self.aux_info = "\n".join([cost_info, status_info])
-
-
+            self.aux_info = '\n'.join([cost_info, status_info])
 
     # =================== #
     # Customized methods. #
@@ -87,7 +90,7 @@ class BarkExpInfo(ExpInfoBase):
         validated_meta = {
             'host': host,
             'cmd': self.exp_meta_info['cmd'],
-            'signature': self.exp_meta_info['signature'],
+            'device_token': self.exp_meta_info['device_token'],
         }
         return validated_meta
 
@@ -100,9 +103,9 @@ class BarkLogInfo(LogInfoBase, BarkExpInfo):
 
     def format_information(self) -> dict:
         information = {
-            "title": f'{self.readable_time}@{self.host}',
-            "subtitle": "",
-            "content": ""+self.current_description,
+            'title': f'{self.readable_time} @ {self.host}',
+            'subtitle': '',
+            'content': self.current_description,
         }
         return information
 
@@ -112,8 +115,11 @@ class BarkLogInfo(LogInfoBase, BarkExpInfo):
             self.exp_meta_info = self._init_meta()
             # Update the meta information to member variables.
             self.host = self.exp_meta_info['host']
-            self.signature = self.exp_meta_info['signature']
+            self.device_token = self.exp_meta_info['device_token']
             return
 
         # Format the time anyway.
-        self.readable_time = time.strftime('%a %d %b %Y %I:%M:%S %p %Z', time.localtime(self.current_timestamp))
+        self.readable_time = time.strftime(
+            '%a %d %b %Y %I:%M:%S %p %Z',
+            time.localtime(self.current_timestamp),
+        )

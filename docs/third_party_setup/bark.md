@@ -13,6 +13,6 @@ Your are required to download Bark and register your device. A code will be gene
   - passive: Adds the notification to the list without waking the screen.
   - critical: Yes it's critical!
   
-- `group` : Group messages, and notifications will display in the notification center by group.
+- `group` : Group messages. Notifications will be displayed in the notification center by group.
 You can also view different groups in the history list.
 - `url` : The URL to redirect to when the push notification is tapped.
