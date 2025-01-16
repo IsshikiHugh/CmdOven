@@ -4,9 +4,9 @@ from .info import *
 
 
 class RespStatus:
-    def __init__(self, has_err:bool, meta:Dict):
+    def __init__(self, has_err:bool, err_msg:str='') -> None:
         self.has_err:bool = has_err
-        self.meta:Dict = meta
+        self.err_msg:str = err_msg
 
 
 class NotifierBackendBase:

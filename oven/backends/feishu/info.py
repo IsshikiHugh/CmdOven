@@ -2,6 +2,7 @@ import time
 from typing import Union, Dict
 
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
+from oven.utils.time import timestamp_to_readable, seconds_to_adaptive_time_cost
 
 
 def lines2reply(lines):
@@ -54,7 +55,7 @@ class FeishuExpInfo(ExpInfoBase):
             return
 
         # Format the time anyway.
-        self.readable_time = time.strftime('%a %d %b %Y %I:%M:%S %p %Z', time.localtime(self.current_timestamp))
+        self.readable_time = timestamp_to_readable(self.current_timestamp)
 
         # Format the information for later use.
         self.current_description = self.current_description
@@ -65,7 +66,7 @@ class FeishuExpInfo(ExpInfoBase):
         else:
             self.exp_info = lines2reply(self.exp_info_backup.split('\n'))
 
-            cost_info = f'⏱️ **Time Cost**: {str(self.current_timestamp - self.start_timestamp)}s.'
+            cost_info = f'⏱️ **Time Cost**: {seconds_to_adaptive_time_cost(self.current_timestamp - self.start_timestamp)}.'
             if self.current_signal == Signal.P:
                 status_info = f'🏃 **Running!**'
             elif self.current_signal == Signal.E:
@@ -139,4 +140,4 @@ class FeishuLogInfo(LogInfoBase, FeishuExpInfo):
             return
 
         # Format the time anyway.
-        self.readable_time = time.strftime('%a %d %b %Y %I:%M:%S %p %Z', time.localtime(self.current_timestamp))
+        self.readable_time = timestamp_to_readable(self.current_timestamp)

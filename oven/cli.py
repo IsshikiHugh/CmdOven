@@ -19,7 +19,10 @@ def oven() -> None:
     action = sys.argv[1]
     args = sys.argv[2:]
 
-    if action == 'help':
+    if action == 'version':
+        from oven.utils import check_version
+        return check_version()
+    elif action == 'help':
         from oven.utils import print_manual
         return print_manual()
     elif action == 'ding':
@@ -34,9 +37,6 @@ def oven() -> None:
     elif action == 'reset-cfg':
         from oven.utils import dump_cfg_temp
         return dump_cfg_temp(overwrite=True)
-    elif action == 'home':
-        from oven.utils import get_home_path
-        return print(get_home_path())
     elif action == 'toggle-backend':
         from oven.utils import toggle_backend
         if len(args) == 0:
@@ -46,6 +46,9 @@ def oven() -> None:
             print(f'😵‍💫 Unexpected argument {args[1:]}!')
             return None
         return toggle_backend(args[0])
+    elif action == 'home':
+        from oven.utils import get_home_path
+        return print(get_home_path())
     else:
         from oven.utils import error_redirect_to_manual
         return error_redirect_to_manual(action)

@@ -40,7 +40,18 @@ def modify_cfg_with_new_backend(cfg_path:Union[Path, str], backend:str) -> bool:
         if '<?>' in str(v) or v is None:
             invalid_fields.append(k)
     if len(invalid_fields) > 0:
-        print(f'⚠️ Backend `{new_backend}` has invalid fields: {invalid_fields}. Please check the config file: {cfg_path}')
+        print(f'😾 Backend `{new_backend}` has invalid fields: {invalid_fields}. Please check the config file: {cfg_path}')
         return False
 
     return True
+
+
+def get_latest_cfg_version() -> str:
+    cfg_temp = get_cfg_temp()
+    # Match a line of version : x.x.x and return x.x.x, x can be anything
+    matches = re.search(r'version\s*:\s*([0-9a-zA-Z-]+\.[0-9a-zA-Z-]+\.[0-9a-zA-Z-]+)', cfg_temp)
+    if matches is None:
+        version = 'Missing!'
+    else:
+        version = matches.group(1)
+    return version
