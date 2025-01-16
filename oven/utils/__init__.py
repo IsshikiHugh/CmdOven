@@ -12,8 +12,8 @@ def get_home_path() -> Path:
     if 'OVEN_HOME' in os.environ:
         home_path = Path(os.environ['OVEN_HOME'])
     else:
-        from oven.consts import default_cfg_home
-        home_path = Path(default_cfg_home)
+        from oven.consts import DEFAULT_CFG_HOME
+        home_path = Path(DEFAULT_CFG_HOME)
     return home_path
 
 
@@ -37,7 +37,6 @@ def dump_cfg_temp(overwrite:bool=False) -> Union[str, Path]:
 def toggle_backend(backend:str) -> None:
     cfg_fn = get_cfg_path()
     modify_cfg_with_new_backend(cfg_fn, backend)
-    return None
 
 
 def check_version() -> None:

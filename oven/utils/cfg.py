@@ -1,13 +1,14 @@
 import re
+from typing import Union
+from pathlib import Path
+
 import requests
 import omegaconf
-from typing import Dict, Union
-from pathlib import Path
 
 
 def get_cfg_temp() -> str:
-    from oven.consts import cfg_temp_url
-    return requests.get(cfg_temp_url).text
+    from oven.consts import CFG_TEMP_URL, REQ_TIMEOUT
+    return requests.get(CFG_TEMP_URL, timeout=REQ_TIMEOUT).text
 
 
 def modify_cfg_with_new_backend(cfg_path:Union[Path, str], backend:str) -> bool:

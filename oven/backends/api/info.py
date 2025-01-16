@@ -1,4 +1,3 @@
-import time
 import socket
 
 from typing import Optional, Dict
@@ -17,6 +16,7 @@ class Signal:
     def is_valid(signal):
         return signal in [Signal.U, Signal.I, Signal.S, Signal.P, Signal.T, Signal.E]
 
+    @staticmethod
     def is_noisy(signal):
         return signal in [Signal.S, Signal.P, Signal.T, Signal.E]
 
@@ -76,7 +76,7 @@ class ExpInfoBase:
             assert Signal.is_valid(self.current_signal), 'Invalid signal.'
             # Get trigger time.
             self.current_timestamp = get_current_timestamp()
-        except AssertionError as e:
+        except AssertionError:
             # Detect signal validity.
             self.current_signal = Signal.E
             self.current_description = f'Invalid signal {self.current_signal} detected.'
@@ -117,7 +117,6 @@ class ExpInfoBase:
 
     def custom_signal_handler(self) -> None:
         ''' Extra process for different signals. Not necessary to be implemented. '''
-        pass
 
 
 

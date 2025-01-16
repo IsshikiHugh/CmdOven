@@ -1,5 +1,4 @@
-import time
-from typing import Union, Dict
+from typing import Dict
 
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
 from oven.utils.time import timestamp_to_readable, seconds_to_adaptive_time_cost
@@ -68,11 +67,11 @@ class FeishuExpInfo(ExpInfoBase):
 
             cost_info = f'⏱️ **Time Cost**: {seconds_to_adaptive_time_cost(self.current_timestamp - self.start_timestamp)}.'
             if self.current_signal == Signal.P:
-                status_info = f'🏃 **Running!**'
+                status_info = '🏃 **Running!**'
             elif self.current_signal == Signal.E:
-                status_info = f'❌ **Error!**'
+                status_info = '❌ **Error!**'
             elif self.current_signal == Signal.T:
-                status_info = f'🔔 Done!'
+                status_info = '🔔 Done!'
             else:
                 assert False, f'Unknown signal: {self.current_signal}'
 

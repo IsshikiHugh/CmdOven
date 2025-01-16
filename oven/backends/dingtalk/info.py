@@ -1,5 +1,4 @@
-import time
-from typing import Union, Dict
+from typing import Dict
 
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
 from oven.utils.time import timestamp_to_readable, seconds_to_adaptive_time_cost
@@ -13,7 +12,7 @@ def plain2md(text):
     text = text.strip().replace('\n', '\n\n')
     return text
 
-line_split = '\n\n'
+LINE_SPLIT = '\n\n'
 
 
 class DingTalkExpInfo(ExpInfoBase):
@@ -28,9 +27,9 @@ class DingTalkExpInfo(ExpInfoBase):
         # 2. Format current description information.
         msg = self.current_description
         # 3. Concatenate the above two information and return.
-        information = prefix + line_split \
-                    + self.exp_info + line_split \
-                    + self.aux_info + line_split \
+        information = prefix + LINE_SPLIT \
+                    + self.exp_info + LINE_SPLIT \
+                    + self.aux_info + LINE_SPLIT \
                     + msg
         return information
 
@@ -59,15 +58,15 @@ class DingTalkExpInfo(ExpInfoBase):
 
             cost_info = f'⏱️ **Time Cost**: {seconds_to_adaptive_time_cost(self.current_timestamp - self.start_timestamp)}.'
             if self.current_signal == Signal.P:
-                status_info = f'🏃 **Running!**'
+                status_info = '🏃 **Running!**'
             elif self.current_signal == Signal.E:
-                status_info = f'❌ **Error!**'
+                status_info = '❌ **Error!**'
             elif self.current_signal == Signal.T:
-                status_info = f'🔔 Done!'
+                status_info = '🔔 Done!'
             else:
                 assert False, f'Unknown signal: {self.current_signal}'
 
-            self.aux_info = cost_info + line_split + status_info
+            self.aux_info = cost_info + LINE_SPLIT + status_info
 
 
     # =================== #
@@ -114,7 +113,7 @@ class DingTalkLogInfo(LogInfoBase, DingTalkExpInfo):
         # 2. Format current description information.
         msg = self.current_description
         # 3. Concatenate the above two information and return.
-        information = prefix + line_split + msg
+        information = prefix + LINE_SPLIT + msg
         return information
 
 

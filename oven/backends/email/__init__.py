@@ -1,15 +1,13 @@
-import json
-import requests
-from typing import Union, Dict
-import base64
-import hashlib
-import hmac
+from typing import Dict
 from datetime import datetime
-from oven.backends.api import NotifierBackendBase, RespStatus
+
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+from oven.backends.api import NotifierBackendBase, RespStatus
 from .info import EmailExpInfo, EmailLogInfo
+
 
 class EmailBackend(NotifierBackendBase):
 

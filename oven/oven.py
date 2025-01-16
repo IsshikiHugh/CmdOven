@@ -1,7 +1,7 @@
-import os
+import sys
 import traceback
 import subprocess
-from typing import Type, Callable, Any, List, Union
+from typing import Type, Callable, Any, Union
 from pathlib import Path
 from omegaconf import OmegaConf
 
@@ -56,7 +56,10 @@ class Oven:
                 resp = func(*args, **kwargs)
             except Exception as e:
                 # Finish baking with error.
-                exp_info.update_signal(signal=Signal.E, description=f'Function internal exception detected: {e}')
+                exp_info.update_signal(
+                    signal=Signal.E,
+                    description=f'Function internal exception detected: {e}',
+                )
                 raise e
 
             # Experiment finished.
@@ -125,12 +128,12 @@ def build_oven(cfg_path:Union[Path, str]=None, raise_err:bool=False) -> Oven:
         # Generate tips.
         searched_paths = f'\n- {cfg_path}'
         print(f'Oven configuration file not found or invalid: {searched_paths}')
-        print(f'You are suggested to set the environment variable `OVEN_HOME` to the directory containing the `cfg.yaml`, or ensure the validity of config files mentioned.')
+        print('You are suggested to set the environment variable `OVEN_HOME` to the directory containing the `cfg.yaml`, or ensure the validity of config files mentioned.')
         print(f'Error: {e}')
 
         if raise_err:
             traceback.print_exc()
             raise e
         else:
-            exit(1)
+            sys.exit(1)
     return oven

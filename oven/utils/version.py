@@ -1,12 +1,12 @@
 import re
-import requests
-
 from typing import Tuple
+
+import requests
 
 
 def get_latest_oven_version() -> str:
-    from oven.consts import oven_version_url
-    src = requests.get(oven_version_url).text
+    from oven.consts import OVEN_VERSION_URL, REQ_TIMEOUT
+    src = requests.get(OVEN_VERSION_URL, timeout=REQ_TIMEOUT).text
     # Match __version__ = 'x.x.x' and return 'x.x.x'
     matches = re.search(r'__version__\s*=\s*[\'\"](.+)[\'\"]', src)
     if matches is None:

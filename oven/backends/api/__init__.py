@@ -18,7 +18,6 @@ class NotifierBackendBase:
 
     def __init__(self, cfg:Dict) -> None:
         ''' Read necessary information from config file. And validate the configuration. '''
-        pass
 
 
     def notify(self, info:ExpInfoBase) -> RespStatus:

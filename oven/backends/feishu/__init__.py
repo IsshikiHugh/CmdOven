@@ -1,12 +1,14 @@
 import json
-import requests
-from typing import Union, Dict, Tuple
+from typing import Dict, Tuple
 import base64
 import hashlib
 import hmac
 from datetime import datetime
-from oven.backends.api import NotifierBackendBase, RespStatus
 
+import requests
+
+from oven.backends.api import NotifierBackendBase, RespStatus
+from oven.consts import REQ_TIMEOUT
 from .info import FeishuExpInfo, FeishuLogInfo
 
 
@@ -26,7 +28,7 @@ class FeishuBackend(NotifierBackendBase):
 
     def _gen_sign(self, secret):
         timestamp = int(datetime.now().timestamp())
-        string_to_sign = '{}\n{}'.format(timestamp, secret)
+        string_to_sign = f'{timestamp}\n{secret}'
         hmac_code = hmac.new(
             string_to_sign.encode("utf-8"), digestmod=hashlib.sha256
         ).digest()
@@ -53,7 +55,7 @@ class FeishuBackend(NotifierBackendBase):
         # 2. Post request and get response.
         has_err, err_msg = False, ''
         try:
-            resp = requests.post(self.url, json=formatted_data)
+            resp = requests.post(self.url, json=formatted_data, timeout=REQ_TIMEOUT)
             resp_dict = json.loads(resp.text)
             has_err, err_msg = self._parse_resp(resp_dict)
         except Exception as e:
@@ -83,9 +85,9 @@ class FeishuBackend(NotifierBackendBase):
         Reference: https://open.feishu.cn/community/articles/7298688341381546012 
         Addition: according to test, if the message is sent successfully, the response will have `code=0`.
         '''
-        if 'code' not in resp_dict or resp_dict['code'] == 0:
-            return False, ''
-        else:
+        has_err, err_msg = False, ''
+        if 'code' in resp_dict and resp_dict['code'] != 0:
             code = resp_dict['code']
             msg = resp_dict['msg']
-            return True, f'[{code}] {msg}'
+            has_err, err_msg = True, f'[{code}] {msg}'
+        return has_err, err_msg

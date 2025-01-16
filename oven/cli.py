@@ -21,34 +21,34 @@ def oven() -> None:
 
     if action == 'version':
         from oven.utils import check_version
-        return check_version()
+        check_version()
     elif action == 'help':
         from oven.utils import print_manual
-        return print_manual()
+        print_manual()
     elif action == 'ding':
         import oven
-        return oven.notify(' '.join(args))
+        oven.notify(' '.join(args))
     elif action == 'bake':
         import oven
-        return oven.get_lazy_oven().ding_cmd(' '.join(args))
+        oven.get_lazy_oven().ding_cmd(' '.join(args))
     elif action == 'init-cfg':
         from oven.utils import dump_cfg_temp
-        return dump_cfg_temp(overwrite=False)
+        dump_cfg_temp(overwrite=False)
     elif action == 'reset-cfg':
         from oven.utils import dump_cfg_temp
-        return dump_cfg_temp(overwrite=True)
+        dump_cfg_temp(overwrite=True)
     elif action == 'toggle-backend':
         from oven.utils import toggle_backend
         if len(args) == 0:
             print('😵‍💫 Please enter the backend you want to switch to!')
-            return None
+            None
         elif len(args) > 1:
             print(f'😵‍💫 Unexpected argument {args[1:]}!')
-            return None
-        return toggle_backend(args[0])
+        else:
+            toggle_backend(args[0])
     elif action == 'home':
         from oven.utils import get_home_path
-        return print(get_home_path())
+        print(get_home_path())
     else:
         from oven.utils import error_redirect_to_manual
-        return error_redirect_to_manual(action)
+        error_redirect_to_manual(action)

@@ -1,5 +1,9 @@
 from pathlib import Path
 
-default_cfg_home = Path.home() / '.config' / 'oven'
-cfg_temp_url = 'https://raw.githubusercontent.com/IsshikiHugh/ExpOven/refs/heads/main/docs/cfg.yaml.temp'
-oven_version_url = 'https://raw.githubusercontent.com/IsshikiHugh/ExpOven/refs/heads/main/oven/version.py'
+DEFAULT_CFG_HOME = Path.home() / '.config' / 'oven'
+CFG_TEMP_URL = \
+    'https://raw.githubusercontent.com/IsshikiHugh/ExpOven/refs/heads/main/docs/cfg.yaml.temp'
+OVEN_VERSION_URL = \
+    'https://raw.githubusercontent.com/IsshikiHugh/ExpOven/refs/heads/main/oven/version.py'
+
+REQ_TIMEOUT = 60 * 3  # in seconds

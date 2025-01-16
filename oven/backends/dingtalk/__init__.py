@@ -2,6 +2,7 @@ import json
 import requests
 from typing import Union, Dict, Tuple
 
+from oven.consts import REQ_TIMEOUT
 from oven.backends.api import NotifierBackendBase, RespStatus
 
 from .info import DingTalkExpInfo, DingTalkLogInfo
@@ -40,12 +41,12 @@ class DingTalkBackend(NotifierBackendBase):
         # 2. Post request and get response.
         has_err, err_msg = False, ''
         try:
-            resp = requests.post(self.url, json=data)
+            resp = requests.post(self.url, json=data, timeout=REQ_TIMEOUT)
             resp_dict = json.loads(resp.text)
             has_err, err_msg = self._parse_resp(resp_dict)
         except Exception as e:
             has_err = True
-            err_msg = 'Cannot send message to DingTalk: {e}'
+            err_msg = f'Cannot send message to DingTalk: {e}'
 
         # 3. Return response dict.
         resp_status = RespStatus(has_err=has_err, err_msg=err_msg)
@@ -66,9 +67,9 @@ class DingTalkBackend(NotifierBackendBase):
     # ================ #
 
     def _parse_resp(self, resp_dict) -> Tuple[bool, str]:
-        if resp_dict['errcode'] == 0:
-            return False, ''
-        else:
+        has_err, err_msg = False, ''
+        if resp_dict['errcode'] != 0:
             code = resp_dict['errcode']
             msg = resp_dict['errmsg']
-            return True, f'[{code}] {msg}'
+            has_err, err_msg = True, f'[{code}] {msg}'
+        return has_err, err_msg
