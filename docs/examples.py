@@ -18,13 +18,13 @@ def test_ding_func() -> None:
 
 def test_bake_cli() -> None:
     print('Test CLI command `bake`.')
-    cmd = 'bake echo \"[test_bake_cli] Hello World!\"'
+    cmd = 'bake echo "[test_bake_cli] Hello World!"'
     subprocess.run(cmd, shell=True, check=True, encoding='utf-8')
 
 
 def test_ding_cli() -> None:
     print('Test CLI command `ding`.')
-    cmd = 'ding \"[test_ding_cli] Hello World!\"'
+    cmd = 'ding "[test_ding_cli] Hello World!"'
     subprocess.run(cmd, shell=True, check=True, encoding='utf-8')
 
 

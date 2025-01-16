@@ -8,10 +8,13 @@ import omegaconf
 
 def get_cfg_temp() -> str:
     from oven.consts import CFG_TEMP_URL, REQ_TIMEOUT
+
     return requests.get(CFG_TEMP_URL, timeout=REQ_TIMEOUT).text
 
 
-def modify_cfg_with_new_backend(cfg_path:Union[Path, str], backend:str) -> bool:
+def modify_cfg_with_new_backend(
+    cfg_path: Union[Path, str], backend: str
+) -> bool:
     # 1. Modify the backend field in the configuration file.
     # Directly store omegaconf will destroy the original file structure. Thus, use regex to replace keywords directly in the text.
     cfg_dict = omegaconf.OmegaConf.load(cfg_path)
@@ -22,17 +25,20 @@ def modify_cfg_with_new_backend(cfg_path:Union[Path, str], backend:str) -> bool:
 
     # Make sure the backend is supported..
     if new_backend not in cfg_dict.keys():
-        print(f'🙁 Backend \"{new_backend}\" is not supported right now or not configured. Please check the config file: {cfg_path}')
+        print(
+            f'🙁 Backend "{new_backend}" is not supported right now or not configured. Please check the config file: {cfg_path}'
+        )
         return False
 
-
     # Match "backend: xxx" and replace "xxx". (There can be multiple spaces between ":" and "xxx".)
-    cfg_text = re.sub(rf'backend\s*:\s*{old_backend}', f'backend: {new_backend}', cfg_text)
+    cfg_text = re.sub(
+        rf'backend\s*:\s*{old_backend}', f'backend: {new_backend}', cfg_text
+    )
 
     with open(cfg_path, 'w') as f:
         f.write(cfg_text)
 
-    print(f'Backend switched from \"{old_backend}\" to \"{new_backend}\".')
+    print(f'Backend switched from "{old_backend}" to "{new_backend}".')
 
     # 2. Check the validity of the backend-specific fields.
     backend_cfg = cfg_dict[new_backend]
@@ -41,7 +47,9 @@ def modify_cfg_with_new_backend(cfg_path:Union[Path, str], backend:str) -> bool:
         if '<?>' in str(v) or v is None:
             invalid_fields.append(k)
     if len(invalid_fields) > 0:
-        print(f'😾 Backend `{new_backend}` has invalid fields: {invalid_fields}. Please check the config file: {cfg_path}')
+        print(
+            f'😾 Backend `{new_backend}` has invalid fields: {invalid_fields}. Please check the config file: {cfg_path}'
+        )
         return False
 
     return True
@@ -50,7 +58,10 @@ def modify_cfg_with_new_backend(cfg_path:Union[Path, str], backend:str) -> bool:
 def get_latest_cfg_version() -> str:
     cfg_temp = get_cfg_temp()
     # Match a line of version : x.x.x and return x.x.x, x can be anything
-    matches = re.search(r'version\s*:\s*([0-9a-zA-Z-]+\.[0-9a-zA-Z-]+\.[0-9a-zA-Z-]+)', cfg_temp)
+    matches = re.search(
+        r'version\s*:\s*([0-9a-zA-Z-]+\.[0-9a-zA-Z-]+\.[0-9a-zA-Z-]+)',
+        cfg_temp,
+    )
     if matches is None:
         version = 'Missing!'
     else:

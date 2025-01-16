@@ -1,14 +1,18 @@
 from typing import Dict
 
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
-from oven.utils.time import timestamp_to_readable, seconds_to_adaptive_time_cost
+from oven.utils.time import (
+    timestamp_to_readable,
+    seconds_to_adaptive_time_cost,
+)
 
 
 def lines2reply(lines):
-    ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
+    """It changes lines to string block and add quotation mark at the beginning of each line."""
     if lines == ['']:
         return ''
     return '> ' + '\n>\n> '.join(lines).strip()
+
 
 class EmailExpInfo(ExpInfoBase):
 
@@ -25,9 +29,9 @@ class EmailExpInfo(ExpInfoBase):
         if len(self.current_description) > 0:
             element += self.current_description
         information = {
-                'subject': f'{self.readable_time} @ {self.host}',
-                'content': element,
-            }
+            'subject': f'{self.readable_time} @ {self.host}',
+            'content': element,
+        }
         return information
 
     # =================== #
@@ -53,7 +57,9 @@ class EmailExpInfo(ExpInfoBase):
             if self.current_description == '':
                 self.exp_info = f'🔥 `{self.cmd}`'
             else:
-                self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(self.current_description.split('\n'))
+                self.exp_info = f'🔥 `{self.cmd}`\n' + lines2reply(
+                    self.current_description.split('\n')
+                )
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
@@ -86,10 +92,10 @@ class EmailExpInfo(ExpInfoBase):
         host = host.strip()
         # Return the validated meta information.
         validated_meta = {
-                'host': host,
-                'cmd': self.exp_meta_info['cmd'],
-                'signature': None,
-            }
+            'host': host,
+            'cmd': self.exp_meta_info['cmd'],
+            'signature': None,
+        }
         return validated_meta
 
 

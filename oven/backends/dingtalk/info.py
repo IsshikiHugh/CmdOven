@@ -1,16 +1,21 @@
 from typing import Dict
 
 from oven.backends.api import Signal, ExpInfoBase, LogInfoBase
-from oven.utils.time import timestamp_to_readable, seconds_to_adaptive_time_cost
+from oven.utils.time import (
+    timestamp_to_readable,
+    seconds_to_adaptive_time_cost,
+)
+
 
 def lines2reply(lines):
-    ''' It changes lines to string block and add quotation mark at the beginning of each line.'''
+    """It changes lines to string block and add quotation mark at the beginning of each line."""
     return '> ' + '\n>\n> '.join(lines).strip()
 
 
 def plain2md(text):
     text = text.strip().replace('\n', '\n\n')
     return text
+
 
 LINE_SPLIT = '\n\n'
 
@@ -27,12 +32,16 @@ class DingTalkExpInfo(ExpInfoBase):
         # 2. Format current description information.
         msg = self.current_description
         # 3. Concatenate the above two information and return.
-        information = prefix + LINE_SPLIT \
-                    + self.exp_info + LINE_SPLIT \
-                    + self.aux_info + LINE_SPLIT \
-                    + msg
+        information = (
+            prefix
+            + LINE_SPLIT
+            + self.exp_info
+            + LINE_SPLIT
+            + self.aux_info
+            + LINE_SPLIT
+            + msg
+        )
         return information
-
 
     def custom_signal_handler(self) -> None:
         # Initialization.
@@ -50,7 +59,9 @@ class DingTalkExpInfo(ExpInfoBase):
         # Format the information for later use.
         self.current_description = plain2md(self.current_description)
         if self.current_signal == Signal.S:
-            self.exp_info = f'🔥 `{self.cmd}`\n\n' + lines2reply(self.current_description.split('\n'))
+            self.exp_info = f'🔥 `{self.cmd}`\n\n' + lines2reply(
+                self.current_description.split('\n')
+            )
             self.exp_info_backup = self.exp_info
             self.aux_info = ''
         else:
@@ -68,15 +79,13 @@ class DingTalkExpInfo(ExpInfoBase):
 
             self.aux_info = cost_info + LINE_SPLIT + status_info
 
-
     # =================== #
     # Customized methods. #
     # =================== #
 
     def get_title(self) -> str:
-        ''' The title is necessary for DingTalk markdown message. '''
+        """The title is necessary for DingTalk markdown message."""
         return f'[{self.sec_key}] {self.readable_time} @ {self.host}'
-
 
     # ================ #
     # Utils functions. #
@@ -94,10 +103,10 @@ class DingTalkExpInfo(ExpInfoBase):
 
         # Return the validated meta information.
         validated_meta = {
-                'host': host,
-                'cmd': self.exp_meta_info['cmd'],
-                'sec_key': self.exp_meta_info['sec_key'],
-            }
+            'host': host,
+            'cmd': self.exp_meta_info['cmd'],
+            'sec_key': self.exp_meta_info['sec_key'],
+        }
         return validated_meta
 
 
@@ -115,7 +124,6 @@ class DingTalkLogInfo(LogInfoBase, DingTalkExpInfo):
         # 3. Concatenate the above two information and return.
         information = prefix + LINE_SPLIT + msg
         return information
-
 
     def custom_signal_handler(self) -> None:
         # Initialization.
