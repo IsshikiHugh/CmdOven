@@ -10,18 +10,18 @@ from oven.backends.api import NotifierBackendBase, RespStatus
 from .info import BarkExpInfo, BarkLogInfo
 
 
+VALID_LEVELS = ['active', 'timeSensitive', 'passive', 'critical']
+
+
 class BarkBackend(NotifierBackendBase):
     def __init__(self, cfg: Dict):
         # Validate the configuration.
         assert (
             'device_token' in cfg and '<?>' not in cfg['device_token']
         ), 'Please ensure the validity of "bark.device_token" field in the configuration file!'
-        assert 'level' in cfg and cfg['level'] in [
-            'active',
-            'timeSensitive',
-            'passive',
-            'critical',
-        ], 'Please ensure the validity of "bark.level" field in the configuration file!'
+        assert (
+            'level' in cfg and cfg['level'] in VALID_LEVELS
+        ), 'Please ensure the validity of "bark.level" field in the configuration file!'
         assert (
             'group' in cfg and '<?>' not in cfg['group']
         ), 'Please ensure the validity of "bark.group" field in the configuration file!'
