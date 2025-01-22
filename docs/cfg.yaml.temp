@@ -12,17 +12,17 @@ feishu:
 
 email:
   # host: <?>  # optional
-  smtp_server: smtp_server=<?>  # smtp.sample.com
+  smtp_server: <?>  # smtp.sample.com
   smtp_port: <?>
-  sender_email: sender_email=<?>  # sample@sample.com
-  sender_pwd: sender_pwd=<?>
-  receiver_email: receiver_email=<?>  # sample@sample.com
+  sender_email: <?>  # sample@sample.com
+  sender_pwd: <?>
+  receiver_email: <?>  # sample@sample.com
 
-bark: 
+bark:
   # host: <?>  # optional
-  device_token: device_token=<?>
-  level: active # active(default) | timeSensitive | passive | critical 
-  group: group=<?> 
-  url : url=<?> 
+  device_token: <?>
+  level: active  # active(default) | timeSensitive | passive | critical
+  group: <?>
+  url : <?>
 
 version: 1.4.0  # version of cfg template
