@@ -13,7 +13,7 @@ You execute your experiments or commands on the server. When the command is comp
 - [DingTalk](./docs/third_party_setup/dingtalk.md)
 - [Feishu(Lark)](./docs/third_party_setup/feishu.md)
 - [Email](./docs/third_party_setup/email.md)
-
+- [Bark](./docs/third_party_setup/bark.md)
 ### Step 1. Install Package
 
 You can clone the repo and install the package with:
